@@ -35,39 +35,6 @@ const userTypeDefs = `#graphql
     password: String,
   }
 
-  type Comments {
-    content: String,
-    username: String,
-    createdAt: String,
-    updatedAt: String,
-  }
-
-  type Likes {
-    username: String,
-    createdAt: String,
-    updatedAt: String,
-  }
-
-  type Posts {
-    _id: ID!,
-    content: String,
-    tags: [String],
-    imgUrl: String,
-    authorId: ID,
-    comments: [Comments],
-    likes: [Likes],
-    createdAt: String,
-    updatedAt: String,
-  }
-    
-  type Follow {
-    _id: ID!,
-    followingId: ID!,
-    followerId: ID!,
-    createdAt: String,
-    updatedAt: String,
-  }
-
   input searchInput {
     name: String,
     username: String,
@@ -77,8 +44,6 @@ const userTypeDefs = `#graphql
     users: [User],
     user(_id: ID!): User,
     searchUser(body: searchInput): [User],
-    posts: [Posts],
-    follows: [Follow],
   }
 
   input AddUserInput {
@@ -103,8 +68,6 @@ const userResolvers = {
     users: () => User.findAll(),
     user: (parent, args) => User.findById(args._id),
     searchUser: (parent, args) => User.search(args.body),
-    posts: () => posts,
-    follows: () => follows,
   },
 
   Mutation: {
