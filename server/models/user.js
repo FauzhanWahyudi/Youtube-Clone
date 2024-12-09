@@ -71,26 +71,47 @@ class User {
   }
 
   static async login(body) {
-    const { username, password } = body;
-    if (!username) {
-      throw new Error("Username is required");
-    }
-    if (!password) {
-      throw new Error("Password is required");
-    }
-    const user = await User.collection.findOne({ username });
-    // console.log("user", user);
-    if (!user) {
-      console.log("🚀 ~ User ~ login ~ s:", s);
-      throw new Error("Invalid username/password");
-    }
-    const isValidatePassword = comparePassword(password, user.password);
-    if (!isValidatePassword) {
-      throw new Error("Invalid username/password");
-    }
+    try {
+      const { username, password } = body;
+      if (!username) {
+        throw new Error("Username is required");
+      }
+      if (!password) {
+        throw new Error("Password is required");
+      }
+      const user = await User.collection.findOne({ username });
+      // console.log("user", user);
+      if (!user) {
+        console.log("🚀 ~ User ~ login ~ s:", s);
+        throw new Error("Invalid username/password");
+      }
+      const isValidatePassword = comparePassword(password, user.password);
+      if (!isValidatePassword) {
+        throw new Error("Invalid username/password");
+      }
 
-    const access_token = signToken(String(user._id));
-    return { access_token };
+      const access_token = signToken(String(user._id));
+      return { access_token };
+    } catch (error) {
+      console.log("🚀 ~ User ~ login ~ error:", error);
+    }
+  }
+  static async search(body) {
+    try {
+      const { name, username } = body;
+      console.log(body);
+      const users = await User.collection
+        .find({
+          $or: [
+            { name: { $regex: name, $options: "i" } },
+            { username: { $regex: username, $options: "i" } },
+          ],
+        })
+        .toArray();
+      return users;
+    } catch (error) {
+      console.log("🚀 ~ User ~ search ~ error:", error);
+    }
   }
 }
 

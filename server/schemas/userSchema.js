@@ -68,12 +68,15 @@ const userTypeDefs = `#graphql
     updatedAt: String,
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  input searchInput {
+    name: String,
+    username: String,
+  }
+
   type Query {
     users: [User],
     user(_id: ID!): User,
+    searchUser(body: searchInput): [User],
     posts: [Posts],
     follows: [Follow],
   }
@@ -99,6 +102,7 @@ const userResolvers = {
   Query: {
     users: () => User.findAll(),
     user: (parent, args) => User.findById(args._id),
+    searchUser: (parent, args) => User.search(args.body),
     posts: () => posts,
     follows: () => follows,
   },
