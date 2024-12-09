@@ -72,21 +72,48 @@ const userTypeDefs = `#graphql
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
-    # books: [Book],
-    # book(title: String): Book
-    users: [User]
-    posts: [Posts]
-    follows: [Follow]
+    users: [User],
+    user(_id: ID!): User,
+    posts: [Posts],
+    follows: [Follow],
+  }
+
+  input AddUserInput {
+    name: String!,
+    email: String!,
+    username: String!,
+    password: String!,
+  }
+
+  input LoginInput {
+    username: String!,
+    password: String!,
+  }
+  type Mutation {
+    addUser(body: AddUserInput!): User,
+    login(body: LoginInput!): String,
   }
 `;
 
 const userResolvers = {
   Query: {
-    // books: () => books,
-    // book: (parent, args) => books.find((book) => book.title == args.title),
-    users: () => users,
+    users: () => User.findAll(),
+    user: (parent, args) => User.findById(args._id),
     posts: () => posts,
     follows: () => follows,
+  },
+
+  Mutation: {
+    addUser: async (parent, args) => {
+      console.log("register", args.body);
+      const { newUser } = await User.addUser(args.body);
+      return newUser;
+    },
+    login: async (parent, args) => {
+      console.log("login", args.body);
+      const { access_token } = await User.login(args.body);
+      return access_token;
+    },
   },
 };
 
