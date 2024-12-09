@@ -14,6 +14,15 @@ const followTypeDefs = `#graphql
   type Query {
     follows: [Follow],
   }
+  
+  input FollowingInput{
+    followingId: ID!,
+    followerId: ID!,
+  }
+
+  type Mutation{
+    addFollowing(body: FollowingInput!): Follow,
+  }
 `;
 
 const followResolvers = {
@@ -21,7 +30,19 @@ const followResolvers = {
     follows: async () => await db.collection("follows").find().toArray(),
   },
 
-  Mutation: {},
+  Mutation: {
+    addFollowing: async (parent, args) => {
+      const createdAt = new Date().toString();
+      const updatedAt = new Date().toString();
+      const newFollow = {
+        ...args.body,
+        createdAt,
+        updatedAt,
+      };
+      await db.collection("follows").insertOne(newFollow);
+      return newFollow;
+    },
+  },
 };
 
 module.exports = { followTypeDefs, followResolvers };
