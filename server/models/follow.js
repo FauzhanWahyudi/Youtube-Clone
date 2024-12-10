@@ -7,8 +7,8 @@ module.exports = class Follow {
     const createdAt = new Date().toString();
     const updatedAt = new Date().toString();
     const newFollow = {
+      ...body,
       followingId: new ObjectId(body.followingId),
-      followerId: new ObjectId(body.followerId),
       createdAt,
       updatedAt,
     };

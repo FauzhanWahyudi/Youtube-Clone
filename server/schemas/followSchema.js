@@ -19,7 +19,6 @@ const followTypeDefs = `#graphql
   
   input FollowingInput{
     followingId: ID!,
-    followerId: ID!,
   }
 
   type Mutation{
@@ -33,7 +32,9 @@ const followResolvers = {
   },
 
   Mutation: {
-    addFollowing: async (parent, args) => {
+    addFollowing: async (parent, args, contextValue) => {
+      const { user } = await contextValue.auth();
+      args.body.followerId = user._id;
       if (!args.body.followingId) {
         throw new Error("FollowingId is required");
       }
