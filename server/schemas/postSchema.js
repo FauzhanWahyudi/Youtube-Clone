@@ -48,7 +48,7 @@ const postsTypeDefs = `#graphql
     content: String!,
   }
 
-    input LikeForm {
+  input LikeForm {
     postId:String!,
   }
 

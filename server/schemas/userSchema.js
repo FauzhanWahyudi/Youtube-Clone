@@ -45,7 +45,7 @@ const userTypeDefs = `#graphql
   
   type Query {
     users: [User],
-    user(_id: ID!): UserByIdResponse,
+    user: UserByIdResponse,
     searchUser(search: String): [User],
   }
 
@@ -75,7 +75,11 @@ const userTypeDefs = `#graphql
 const userResolvers = {
   Query: {
     users: () => User.findAll(),
-    user: (parent, args) => User.findById(args._id),
+    user: async (parent, args, contextValue) => {
+      const { user } = await contextValue.auth();
+      const { _id } = user;
+      return User.findById(_id);
+    },
     searchUser: (parent, args) => {
       if (!args.search) return [];
       return User.search(args.search);
