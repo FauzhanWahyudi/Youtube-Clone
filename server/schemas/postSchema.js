@@ -61,14 +61,25 @@ const postsTypeDefs = `#graphql
 
 const postsResolvers = {
   Query: {
-    posts: async () => {
+    //get all post
+    posts: async (parent, args, contextValue) => {
+      //authenticate user
+      await contextValue.auth();
+
+      //get data from cache (redis)
       let posts = await redis.get("posts");
+
+      //check data in cache
       if (posts) {
+        //directly return data if ready
         return JSON.parse(posts);
       }
+
+      //get data from mongodb
       posts = await Post.collection
         .aggregate([
           {
+            //lookup to join post with user
             $lookup: {
               from: "users",
               localField: "authorId",
@@ -77,41 +88,72 @@ const postsResolvers = {
             },
           },
           {
+            //sort date descending
             $sort: { createdAt: -1 },
           },
         ])
+        //convert object instance to array
         .toArray();
-      console.log("add redis");
+      // console.log("add redis");
+
+      //convert data to string (because redis only store string)
+      //and set data to cache
       await redis.set("posts", JSON.stringify(posts));
+
       return posts;
     },
-    post: async (parent, args) => {
+
+    //get post by id
+    post: async (parent, args, contextValue) => {
+      //authenticate user
+      await contextValue.auth();
+
       return await Post.getPostById(args._id);
     },
   },
 
   Mutation: {
+    //create post
     addPost: async (parent, args, contextValue) => {
+      //get authenticated user
       const { user } = await contextValue.auth();
 
+      //assign user id to body authorId
       args.body.authorId = user._id;
+
+      //check if content is inputted
       const { content } = args.body;
       if (!content) {
         throw new Error("Content is required");
       }
 
+      //do create post
       const newPost = await Post.addPost(args.body);
+
+      //delete posts cache after create (to update when fetch posts)
       await redis.del("posts");
+
       return newPost;
     },
 
+    //add comment to specific post
     addComment: async (parent, args, contextValue) => {
+      //get authenticated user
       const { user } = await contextValue.auth();
+
+      //check if content is inputted
+      const { content } = args.body;
+      if (!content) {
+        throw new Error("Content is required");
+      }
+
       args.body.username = user.username;
       return await Post.addComment(args.body);
     },
 
+    //add like to specific post
     addLike: async (parent, args, contextValue) => {
+      //get authenticated user
       const { user } = await contextValue.auth();
       args.body.username = user.username;
       return await Post.addLike(args.body);

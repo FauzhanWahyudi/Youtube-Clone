@@ -74,23 +74,39 @@ const userTypeDefs = `#graphql
 
 const userResolvers = {
   Query: {
-    users: () => User.findAll(),
+    //get all user
+    users: async (parent, args, contextValue) => {
+      //authenticate user
+      await contextValue.auth();
+
+      //get all users
+      return User.findAll();
+    },
+
+    //get user profile (data) with followers and following data
     user: async (parent, args, contextValue) => {
+      //get authenticated user
       const { user } = await contextValue.auth();
       const { _id } = user;
       return User.findById(_id);
     },
-    searchUser: (parent, args) => {
+
+    //search user by name or username
+    searchUser: async (parent, args, contextValue) => {
+      //authenticate user
+      await contextValue.auth();
+
+      //check input
       if (!args.search) return [];
       return User.search(args.search);
     },
   },
 
   Mutation: {
+    //register new user
     addUser: async (parent, args) => {
       const users = await User.findAll();
       let user = null;
-
       const { username, email, password } = args.body;
 
       //check username
@@ -107,6 +123,7 @@ const userResolvers = {
       //check email
       if (!email) {
         throw new Error("Email is required");
+        //check if email is valid
       } else if (!isEmail(email)) {
         throw new Error("Invalid email password");
       }
@@ -120,20 +137,27 @@ const userResolvers = {
       if (!password) {
         throw new Error("Password is required");
       }
+      //check password length
       if (password.length < 5) {
         throw new Error("Password at least 5 character");
       }
+
+      //create new user
       const { newUser } = await User.addUser(args.body);
       return newUser;
     },
 
+    //user login
     login: async (parent, args) => {
+      //check if username is inputted
       if (!args.body.username) {
         throw new Error("Username is required");
       }
+      //check if password is inputted
       if (!args.body.password) {
         throw new Error("Password is required");
       }
+      //get access_token and user data
       const { access_token, user } = await User.login(args.body);
       return { access_token, user };
     },

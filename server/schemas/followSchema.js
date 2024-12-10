@@ -8,8 +8,8 @@ const followTypeDefs = `#graphql
     
   type Follow {
     _id: ID!,
-    followingId: ID!,
-    followerId: ID!,
+    followingId: ID,
+    followerId: ID,
     createdAt: String,
     updatedAt: String,
     user: User,
@@ -30,11 +30,13 @@ const followTypeDefs = `#graphql
 
 const followResolvers = {
   Query: {
+    //get all follow data
     follows: async () => await Follow.collection.find().toArray(),
   },
 
   Mutation: {
     addFollowing: async (parent, args, contextValue) => {
+      //get authenticated user
       const { user } = await contextValue.auth();
 
       //check input

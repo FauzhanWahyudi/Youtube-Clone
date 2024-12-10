@@ -69,7 +69,6 @@ class User {
           },
         ])
         .toArray();
-      // console.log(user, followers, following);
       return {
         user,
         followers,
