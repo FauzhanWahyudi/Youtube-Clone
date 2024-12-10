@@ -1,3 +1,4 @@
+const redis = require("../config/cache");
 const Post = require("../models/post");
 
 const postsTypeDefs = `#graphql
@@ -60,8 +61,12 @@ const postsTypeDefs = `#graphql
 
 const postsResolvers = {
   Query: {
-    posts: () =>
-      Post.collection
+    posts: async () => {
+      let posts = await redis.get("posts");
+      if (posts) {
+        return JSON.parse(posts);
+      }
+      posts = await Post.collection
         .aggregate([
           {
             $lookup: {
@@ -75,7 +80,11 @@ const postsResolvers = {
             $sort: { createdAt: -1 },
           },
         ])
-        .toArray(),
+        .toArray();
+      console.log("add redis");
+      await redis.set("posts", JSON.stringify(posts));
+      return posts;
+    },
     post: async (parent, args) => {
       return await Post.getPostById(args._id);
     },
@@ -90,13 +99,18 @@ const postsResolvers = {
       if (!content) {
         throw new Error("Content is required");
       }
-      return await Post.addPost(args.body);
+
+      const newPost = await Post.addPost(args.body);
+      await redis.del("posts");
+      return newPost;
     },
+
     addComment: async (parent, args, contextValue) => {
       const { user } = await contextValue.auth();
       args.body.username = user.username;
       return await Post.addComment(args.body);
     },
+
     addLike: async (parent, args, contextValue) => {
       const { user } = await contextValue.auth();
       args.body.username = user.username;
