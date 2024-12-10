@@ -1,8 +1,8 @@
 const { ObjectId } = require("mongodb");
 const { db } = require("../config/db");
 const { hashPassword, comparePassword } = require("../helpers/hash");
-const isEmail = require("is-email");
 const { signToken } = require("../helpers/jwt");
+const Follow = require("./follow");
 
 class User {
   static collection = db.collection("users");
@@ -17,7 +17,64 @@ class User {
 
   static async findById(_id) {
     try {
-      return await User.collection.findOne({ _id: new ObjectId(_id) });
+      const user = await User.collection.findOne({ _id: new ObjectId(_id) });
+      const followers = await Follow.collection
+        .aggregate([
+          { $match: { followingId: user._id } },
+          {
+            $lookup: {
+              from: "users",
+              localField: "followerId",
+              foreignField: "_id",
+              as: "user",
+            },
+          },
+          {
+            $unwind: {
+              path: "$user",
+            },
+          },
+          {
+            $project: {
+              user: {
+                password: 0,
+              },
+            },
+          },
+        ])
+        .toArray();
+
+      const following = await Follow.collection
+        .aggregate([
+          { $match: { followerId: user._id } },
+          {
+            $lookup: {
+              from: "users",
+              localField: "followingId",
+              foreignField: "_id",
+              as: "user",
+            },
+          },
+          {
+            $unwind: {
+              path: "$user",
+            },
+          },
+          {
+            $project: {
+              user: {
+                password: 0,
+              },
+            },
+          },
+        ])
+        .toArray();
+      // console.log(user, followers, following);
+      return {
+        user,
+        followers,
+        following,
+      };
     } catch (error) {
       console.log("🚀 ~ User ~ findById ~ error:", error);
     }
@@ -25,40 +82,6 @@ class User {
 
   static async addUser(body) {
     try {
-      const users = await User.findAll();
-      let user = null;
-
-      const { username, email, password } = body;
-      //check username
-      if (!username) {
-        throw new Error("Username is required");
-      }
-      //check if username is unique
-      user = users.find((user) => user.username === username);
-      if (user) {
-        throw new Error("Username already registered");
-      }
-
-      //check email
-      if (!email) {
-        throw new Error("Email is required");
-      } else if (!isEmail(email)) {
-        throw new Error("Invalid email password");
-      }
-      //check if email is unique
-      user = users.find((user) => user.email === email);
-      if (user) {
-        throw new Error("Email already registered");
-      }
-
-      //check password
-      if (!password) {
-        throw new Error("Password is required");
-      }
-      if (password.length < 5) {
-        throw new Error("Password at least 5 character");
-      }
-
       const newUser = {
         ...body,
         password: hashPassword(body.password),
@@ -73,16 +96,9 @@ class User {
   static async login(body) {
     try {
       const { username, password } = body;
-      if (!username) {
-        throw new Error("Username is required");
-      }
-      if (!password) {
-        throw new Error("Password is required");
-      }
       const user = await User.collection.findOne({ username });
-      // console.log("user", user);
+
       if (!user) {
-        console.log("🚀 ~ User ~ login ~ s:", s);
         throw new Error("Invalid username/password");
       }
       const isValidatePassword = comparePassword(password, user.password);
@@ -91,20 +107,19 @@ class User {
       }
 
       const access_token = signToken(String(user._id));
-      return { access_token };
+      return { access_token, user };
     } catch (error) {
       console.log("🚀 ~ User ~ login ~ error:", error);
     }
   }
-  static async search(body) {
+
+  static async search(search) {
     try {
-      const { name, username } = body;
-      console.log(body);
       const users = await User.collection
         .find({
           $or: [
-            { name: { $regex: name, $options: "i" } },
-            { username: { $regex: username, $options: "i" } },
+            { name: { $regex: search, $options: "i" } },
+            { username: { $regex: search, $options: "i" } },
           ],
         })
         .toArray();

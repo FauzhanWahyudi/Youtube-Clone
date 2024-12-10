@@ -1,4 +1,5 @@
 const { db } = require("../config/db");
+const Follow = require("../models/follow");
 
 const followTypeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
@@ -9,6 +10,7 @@ const followTypeDefs = `#graphql
     followerId: ID!,
     createdAt: String,
     updatedAt: String,
+    user: User,
   }
 
   type Query {
@@ -27,26 +29,18 @@ const followTypeDefs = `#graphql
 
 const followResolvers = {
   Query: {
-    follows: async () => await db.collection("follows").find().toArray(),
+    follows: async () => await Follow.collection.find().toArray(),
   },
 
   Mutation: {
     addFollowing: async (parent, args) => {
-      if (!args.followingId) {
+      if (!args.body.followingId) {
         throw new Error("FollowingId is required");
       }
-      if (!args.followerId) {
+      if (!args.body.followerId) {
         throw new Error("FollowerId is required");
       }
-      const createdAt = new Date().toString();
-      const updatedAt = new Date().toString();
-      const newFollow = {
-        ...args.body,
-        createdAt,
-        updatedAt,
-      };
-      await db.collection("follows").insertOne(newFollow);
-      return newFollow;
+      return await Follow.addFollowing(args.body);
     },
   },
 };

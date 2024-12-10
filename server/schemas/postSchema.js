@@ -1,26 +1,22 @@
 const { ObjectId } = require("mongodb");
 const { db } = require("../config/db");
+const Post = require("../models/post");
 
 const postsTypeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
     
     
-  type Comments {
+  type Comment {
     content: String!,
     username: String!,
     createdAt: String,
     updatedAt: String,
   }
 
-  type Likes {
+  type Like {
     username: String!,
     createdAt: String,
     updatedAt: String,
-  }
-
-  type Author{
-    name: String,
-    email: String,
   }
 
   type Post {
@@ -29,11 +25,11 @@ const postsTypeDefs = `#graphql
     tags: [String],
     imgUrl: String,
     authorId: ID!,
-    comments: [Comments],
-    likes: [Likes],
+    comments: [Comment],
+    likes: [Like],
     createdAt: String,
     updatedAt: String,
-    Author: [Author]
+    author: [User]
   }
 
   type Query {
@@ -55,19 +51,20 @@ const postsTypeDefs = `#graphql
 const postsResolvers = {
   Query: {
     posts: () =>
-      db
-        .collection("posts")
+      Post.collection
         .aggregate([
           {
             $lookup: {
               from: "users",
               localField: "authorId",
               foreignField: "_id",
-              as: "Author",
+              as: "author",
             },
           },
+          {
+            $sort: { createdAt: -1 },
+          },
         ])
-        .sort({ createdAt: -1 })
         .toArray(),
   },
 
@@ -80,14 +77,7 @@ const postsResolvers = {
       if (!content) {
         throw new Error("Content is required");
       }
-      const newPost = {
-        ...args.body,
-        authorId: new ObjectId(authorId),
-        createdAt: new Date().toString(),
-        updatedAt: new Date().toString(),
-      };
-      await db.collection("posts").insertOne(newPost);
-      return newPost;
+      return await Post.addPost(args.body);
     },
   },
 };
