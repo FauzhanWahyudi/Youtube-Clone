@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { db } = require("../config/db");
 
 const postsTypeDefs = `#graphql
@@ -17,6 +18,11 @@ const postsTypeDefs = `#graphql
     updatedAt: String,
   }
 
+  type Author{
+    name: String,
+    email: String,
+  }
+
   type Post {
     _id: ID!,
     content: String!,
@@ -27,6 +33,7 @@ const postsTypeDefs = `#graphql
     likes: [Likes],
     createdAt: String,
     updatedAt: String,
+    Author: [Author]
   }
 
   type Query {
@@ -47,7 +54,21 @@ const postsTypeDefs = `#graphql
 
 const postsResolvers = {
   Query: {
-    posts: () => db.collection("posts").find().toArray(),
+    posts: () =>
+      db
+        .collection("posts")
+        .aggregate([
+          {
+            $lookup: {
+              from: "users",
+              localField: "authorId",
+              foreignField: "_id",
+              as: "Author",
+            },
+          },
+        ])
+        .sort({ createdAt: -1 })
+        .toArray(),
   },
 
   Mutation: {
@@ -61,6 +82,7 @@ const postsResolvers = {
       }
       const newPost = {
         ...args.body,
+        authorId: new ObjectId(authorId),
         createdAt: new Date().toString(),
         updatedAt: new Date().toString(),
       };
