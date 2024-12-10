@@ -1,5 +1,3 @@
-const { ObjectId } = require("mongodb");
-const { db } = require("../config/db");
 const Post = require("../models/post");
 
 const postsTypeDefs = `#graphql
@@ -94,7 +92,11 @@ const postsResolvers = {
       }
       return await Post.addPost(args.body);
     },
-    addComment: () => {},
+    addComment: async (parent, args, contextValue) => {
+      const { user } = await contextValue.auth();
+      args.body.username = user.username;
+      return await Post.addComment(args.body);
+    },
     addLike: async (parent, args, contextValue) => {
       const { user } = await contextValue.auth();
       args.body.username = user.username;

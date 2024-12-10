@@ -2,6 +2,7 @@ const { db } = require("../config/db");
 
 module.exports = class Post {
   static collection = db.collection("posts");
+
   static async getPostById(_id) {
     // console.log(_id);
     try {
@@ -23,6 +24,7 @@ module.exports = class Post {
       console.log("🚀 ~ Post ~ getPostById ~ error:", error);
     }
   }
+
   static async addPost(body) {
     const newPost = {
       ...body,
@@ -33,6 +35,7 @@ module.exports = class Post {
     await Post.collection.insertOne(newPost);
     return newPost;
   }
+
   static async addLike(body) {
     const { postId, username } = body;
     const newLike = {
@@ -49,5 +52,24 @@ module.exports = class Post {
       }
     );
     return newLike;
+  }
+
+  static async addComment(body) {
+    const { postId, username, content } = body;
+    const newComment = {
+      content,
+      username,
+      createdAt: new Date().toString(),
+      updatedAt: new Date().toString(),
+    };
+    await Post.collection.updateOne(
+      { _id: new ObjectId(postId) },
+      {
+        $push: {
+          comments: newComment,
+        },
+      }
+    );
+    return newComment;
   }
 };
