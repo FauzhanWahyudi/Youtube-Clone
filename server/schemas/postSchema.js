@@ -33,7 +33,8 @@ const postsTypeDefs = `#graphql
   }
 
   type Query {
-    posts: [Post]  
+    posts: [Post]
+    post(_id: ID!): Post
   }
 
   input PostForm {
@@ -43,8 +44,19 @@ const postsTypeDefs = `#graphql
     authorId: ID!,
   }
 
+  input CommentForm {
+    postId:String!,
+    content: String!,
+  }
+
+    input LikeForm {
+    postId:String!,
+  }
+
   type Mutation{
     addPost(body:PostForm!):Post
+    addComment(body:CommentForm!):Comment
+    addLike(body:LikeForm):Like
   }
 `;
 
@@ -66,6 +78,9 @@ const postsResolvers = {
           },
         ])
         .toArray(),
+    post: async (parent, args) => {
+      return await Post.getPostById(args._id);
+    },
   },
 
   Mutation: {
@@ -78,6 +93,12 @@ const postsResolvers = {
         throw new Error("Content is required");
       }
       return await Post.addPost(args.body);
+    },
+    addComment: () => {},
+    addLike: async (parent, args, contextValue) => {
+      const { user } = await contextValue.auth();
+      args.body.username = user.username;
+      return await Post.addLike(args.body);
     },
   },
 };
