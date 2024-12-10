@@ -69,11 +69,11 @@ const postsResolvers = {
   },
 
   Mutation: {
-    addPost: async (parent, args) => {
-      const { authorId, content } = args.body;
-      if (!authorId) {
-        throw new Error("Author Id is required");
-      }
+    addPost: async (parent, args, contextValue) => {
+      const { user } = await contextValue.auth();
+
+      args.body.authorId = user._id;
+      const { content } = args.body;
       if (!content) {
         throw new Error("Content is required");
       }
