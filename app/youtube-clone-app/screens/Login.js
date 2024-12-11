@@ -18,9 +18,12 @@ export default function Login({ navigation }) {
         />
         <Card.Content style={{ marginTop: "10" }}>
           <Text variant="titleLarge" style={{ textAlign: "center" }}>
-            Sign In
+            Login
           </Text>
-          <Text variant="bodyMedium" style={{ textAlign: "center" }}>
+          <Text
+            variant="bodyMedium"
+            style={{ textAlign: "center", marginTop: "5" }}
+          >
             to continue to YouTube
           </Text>
         </Card.Content>
@@ -28,37 +31,30 @@ export default function Login({ navigation }) {
           <TextInput label="Email" mode="outlined" />
           <TextInput label="Password" mode="outlined" />
         </Card.Content>
-        <Card.Actions className="mx-auto" style={{ marginTop: "15" }}>
+        <Card.Actions style={{ marginTop: "15" }}>
           <Button
             icon="login"
             mode="contained"
             onPress={() => console.log("login")}
             textColor="#1c1c1c"
             style={{ flex: 1 }}
+            contentStyle={{ width: "100%" }}
           >
             Login
-          </Button>{" "}
-          <Button
-            icon="cancel"
-            mode="elevated"
-            buttonColor="#bf4025"
-            onPress={() => console.log("logout")}
-            textColor="#ffffff"
-          >
-            Cancel
           </Button>
         </Card.Actions>
-        <Card.Content cla>
-          <Text variant="bodyMedium" style={{ textAlign: "center" }}>
-            Don't have an account?{" "}
-            <Text
-              className="underline"
-              style={{ fontWeight: "bold", color: "#2b37c6" }}
-            >
-              Sign Up
-            </Text>
-          </Text>
-        </Card.Content>
+        <Card.Actions style={{ marginTop: 0 }}>
+          <Button
+            icon="account-plus-outline"
+            mode="text"
+            onPress={() => console.log("register")}
+            textColor="#ffff"
+            style={{ flex: 1 }}
+            contentStyle={{ width: "100%" }}
+          >
+            Register
+          </Button>
+        </Card.Actions>
       </Card>
     </View>
   );
