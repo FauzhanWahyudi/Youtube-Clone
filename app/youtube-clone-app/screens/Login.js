@@ -17,7 +17,7 @@ export default function Login({ navigation }) {
           }}
         />
         <Card.Content style={{ marginTop: "10" }}>
-          <Text variant="titleLarge" style={{ textAlign: "center" }}>
+          <Text variant="headlineLarge" style={{ textAlign: "center" }}>
             Login
           </Text>
           <Text
@@ -47,7 +47,10 @@ export default function Login({ navigation }) {
           <Button
             icon="account-plus-outline"
             mode="text"
-            onPress={() => console.log("register")}
+            onPress={() => {
+              console.log("register");
+              navigation.navigate("Register");
+            }}
             textColor="#ffff"
             style={{ flex: 1 }}
             contentStyle={{ width: "100%" }}
