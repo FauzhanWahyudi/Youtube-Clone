@@ -1,8 +1,20 @@
 import { View } from "react-native";
 import { Avatar, Button, Card, Text, TextInput } from "react-native-paper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function Register({ navigation }) {
+  //get insets data for safe area padding
+  const insets = useSafeAreaInsets();
+
   return (
-    <View className="flex-1 justify-center items-center">
+    <View
+      className="flex-1 justify-center items-center"
+      style={{
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
+      }}
+    >
       <Card className="w-5/6 justify-center" style={{ padding: "20" }}>
         <Card.Cover
           source={{

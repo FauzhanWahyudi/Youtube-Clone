@@ -1,4 +1,5 @@
 import "./global.css";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { PaperProvider } from "react-native-paper";
 import RootStack from "./navigations/Stack";
 import {
@@ -24,9 +25,11 @@ const CombinedDarkTheme = merge(MD3DarkTheme, DarkTheme);
 export default function App() {
   return (
     <PaperProvider theme={CombinedDarkTheme}>
-      <NavigationContainer theme={CombinedDarkTheme}>
-        <RootStack />
-      </NavigationContainer>
+      <SafeAreaProvider>
+        <NavigationContainer theme={CombinedDarkTheme}>
+          <RootStack />
+        </NavigationContainer>
+      </SafeAreaProvider>
     </PaperProvider>
   );
 }
