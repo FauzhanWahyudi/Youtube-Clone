@@ -22,6 +22,7 @@ module.exports = class Post {
       return post[0];
     } catch (error) {
       console.log("🚀 ~ Post ~ getPostById ~ error:", error);
+      throw error;
     }
   }
 
@@ -32,44 +33,59 @@ module.exports = class Post {
       createdAt: new Date().toString(),
       updatedAt: new Date().toString(),
     };
-    await Post.collection.insertOne(newPost);
-    return newPost;
+    try {
+      await Post.collection.insertOne(newPost);
+      return newPost;
+    } catch (error) {
+      console.log("🚀 ~ Post ~ addPost ~ error:", error);
+      throw error;
+    }
   }
 
   static async addLike(body) {
-    const { postId, username } = body;
-    const newLike = {
-      username,
-      createdAt: new Date().toString(),
-      updatedAt: new Date().toString(),
-    };
-    await Post.collection.updateOne(
-      { _id: new ObjectId(postId) },
-      {
-        $push: {
-          likes: newLike,
-        },
-      }
-    );
-    return newLike;
+    try {
+      const { postId, username } = body;
+      const newLike = {
+        username,
+        createdAt: new Date().toString(),
+        updatedAt: new Date().toString(),
+      };
+      await Post.collection.updateOne(
+        { _id: new ObjectId(postId) },
+        {
+          $push: {
+            likes: newLike,
+          },
+        }
+      );
+      return newLike;
+    } catch (error) {
+      console.log("🚀 ~ Post ~ addLike ~ error:", error);
+      throw error;
+    }
   }
 
   static async addComment(body) {
-    const { postId, username, content } = body;
-    const newComment = {
-      content,
-      username,
-      createdAt: new Date().toString(),
-      updatedAt: new Date().toString(),
-    };
-    await Post.collection.updateOne(
-      { _id: new ObjectId(postId) },
-      {
-        $push: {
-          comments: newComment,
-        },
-      }
-    );
-    return newComment;
+    try {
+      const { postId, username, content } = body;
+      const newComment = {
+        content,
+        username,
+        createdAt: new Date().toString(),
+        updatedAt: new Date().toString(),
+      };
+      await Post.collection.updateOne(
+        { _id: new ObjectId(postId) },
+        {
+          $push: {
+            comments: newComment,
+          },
+        }
+      );
+      return newComment;
+    } catch (error) {
+      console.log("🚀 ~ Post ~ addComment ~ error:", error);
+      throw error;
+    }
   }
 };

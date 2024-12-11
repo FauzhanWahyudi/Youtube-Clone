@@ -12,6 +12,7 @@ class User {
       return await User.collection.find().toArray();
     } catch (error) {
       console.log("🚀 ~ User ~ findAll ~ error:", error);
+      throw error;
     }
   }
 
@@ -76,6 +77,7 @@ class User {
       };
     } catch (error) {
       console.log("🚀 ~ User ~ findById ~ error:", error);
+      throw error;
     }
   }
 
@@ -89,6 +91,7 @@ class User {
       return { newUser };
     } catch (error) {
       console.log("🚀 ~ User ~ addUser ~ error:", error);
+      throw error;
     }
   }
 
@@ -109,6 +112,7 @@ class User {
       return { access_token, user };
     } catch (error) {
       console.log("🚀 ~ User ~ login ~ error:", error);
+      throw error;
     }
   }
 
@@ -125,6 +129,7 @@ class User {
       return users;
     } catch (error) {
       console.log("🚀 ~ User ~ search ~ error:", error);
+      throw error;
     }
   }
 }

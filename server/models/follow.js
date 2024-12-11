@@ -12,7 +12,12 @@ module.exports = class Follow {
       createdAt,
       updatedAt,
     };
-    await Follow.collection.insertOne(newFollow);
-    return newFollow;
+    try {
+      await Follow.collection.insertOne(newFollow);
+      return newFollow;
+    } catch (error) {
+      console.log("🚀 ~ Follow ~ addFollowing ~ error:", error);
+      throw error;
+    }
   }
 };

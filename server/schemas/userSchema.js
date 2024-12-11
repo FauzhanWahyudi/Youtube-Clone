@@ -45,7 +45,7 @@ const userTypeDefs = `#graphql
   
   type Query {
     users: [User],
-    user: UserByIdResponse,
+    user(_id:ID): UserByIdResponse,
     searchUser(search: String): [User],
   }
 
@@ -85,9 +85,12 @@ const userResolvers = {
 
     //get user profile (data) with followers and following data
     user: async (parent, args, contextValue) => {
+      let _id = args._id;
+      if (!_id) {
+        const { user } = await contextValue.auth();
+        _id = user._id;
+      }
       //get authenticated user
-      const { user } = await contextValue.auth();
-      const { _id } = user;
       return User.findById(_id);
     },
 
