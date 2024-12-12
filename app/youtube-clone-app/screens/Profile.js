@@ -1,10 +1,9 @@
-import { Image, View } from "react-native";
-import { Text } from "react-native-paper";
+import { Image, Text, View } from "react-native";
 
 export default function Profile({ navigation }) {
   return (
-    <View className="justify-center items-center" style={{ flex: 1 }}>
-      <View className="justify-center items-center" style={{ flex: 1 }}>
+    <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center">
         <View className="flex flex-row  gap-4 justify-center items-center">
           <Image
             source={{
@@ -13,17 +12,19 @@ export default function Profile({ navigation }) {
             style={{ width: "70", height: "70" }}
           />
           <View>
-            <Text variant="titleLarge">Username</Text>
-            <Text variant="bodyMedium">Email</Text>
-            <Text variant="bodySmall">6 Videos</Text>
+            <Text className="text-white">Username</Text>
+            <Text className="text-white"> Email</Text>
+            <Text className="text-white">6 Videos</Text>
           </View>
         </View>
       </View>
-      <View className="justify-center items-center" style={{ flex: 1 }}>
-        <Text className="uppercase text-3xl"> Follower / Following</Text>
+      <View className="flex-1 justify-center items-center">
+        <Text className="uppercase text-3xl text-white">
+          Follower / Following
+        </Text>
       </View>
-      <View className="justify-center items-center" style={{ flex: 2 }}>
-        <Text className="uppercase text-3xl"> LIST OF Videos</Text>
+      <View className="flex-1 justify-center items-center" style={{ flex: 2 }}>
+        <Text className="uppercase text-3xl text-white"> LIST OF Videos</Text>
       </View>
     </View>
   );
