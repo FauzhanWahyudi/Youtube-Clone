@@ -16,6 +16,11 @@ module.exports = class Post {
           },
         },
         {
+          $unwind: {
+            path: "$author",
+          },
+        },
+        {
           //sort date descending
           $sort: { createdAt: -1 },
         },
