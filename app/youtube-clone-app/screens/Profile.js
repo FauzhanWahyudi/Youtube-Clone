@@ -1,4 +1,5 @@
-import { Image, Text, View } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
 export default function Profile({ navigation }) {
   return (
@@ -25,6 +26,11 @@ export default function Profile({ navigation }) {
       </View>
       <View className="flex-1 justify-center items-center" style={{ flex: 2 }}>
         <Text className="uppercase text-3xl text-white"> LIST OF Videos</Text>
+        <TouchableOpacity
+          onPress={() => SecureStore.deleteItemAsync("access_token")}
+        >
+          <Text className="text-white text-4xl">Log OUT</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

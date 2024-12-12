@@ -23,7 +23,6 @@ export default function Login({ navigation }) {
     });
     const access_token = data.login.access_token;
     await SecureStore.setItemAsync("access_token", access_token);
-    console.log(await SecureStore.getItemAsync("access_token"));
     navigation.navigate("Home");
   };
 
