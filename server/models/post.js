@@ -70,6 +70,13 @@ module.exports = class Post {
         createdAt: new Date().toString(),
         updatedAt: new Date().toString(),
       };
+      const { likes } = await Post.collection.findOne({
+        _id: new ObjectId(postId),
+      });
+      if (likes && likes.some((like) => like.username === username)) {
+        throw new Error("Can't like same the post");
+      }
+
       await Post.collection.updateOne(
         { _id: new ObjectId(postId) },
         {
