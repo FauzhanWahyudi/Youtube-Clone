@@ -51,7 +51,7 @@ module.exports = class Follow {
   static async getFollowing(_id) {
     return await Follow.collection
       .aggregate([
-        { $match: { followerId: user._id } },
+        { $match: { followerId: _id } },
         {
           $lookup: {
             from: "users",
