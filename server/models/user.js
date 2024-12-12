@@ -43,22 +43,6 @@ class User {
     }
   }
 
-  static async profile(_id) {
-    try {
-      const user = await User.findById(_id);
-      const followers = await Follow.getFollowers(user._id);
-      const following = await Follow.getFollowing(user._id);
-      return {
-        user,
-        followers,
-        following,
-      };
-    } catch (error) {
-      console.log("🚀 ~ User ~ findById ~ error:", error);
-      throw error;
-    }
-  }
-
   static async addUser(body) {
     try {
       const newUser = {

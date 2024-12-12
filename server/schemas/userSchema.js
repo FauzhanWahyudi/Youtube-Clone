@@ -90,8 +90,19 @@ const userResolvers = {
         const { user } = await contextValue.auth();
         _id = user._id;
       }
-      //get authenticated user
-      return User.profile(_id);
+      try {
+        const user = await User.findById(_id);
+        const followers = await Follow.getFollowers(user._id);
+        const following = await Follow.getFollowing(user._id);
+        return {
+          user,
+          followers,
+          following,
+        };
+      } catch (error) {
+        console.log("🚀 ~ User ~ findById ~ error:", error);
+        throw error;
+      }
     },
 
     //search user by name or username
