@@ -1,18 +1,30 @@
-import { TouchableHighlight, View, Text } from "react-native";
+import { Image, View } from "react-native";
+import { Text } from "react-native-paper";
 
 export default function Profile({ navigation }) {
-  // const navigation = useNavigation();
-  //can be used when component is 2 level lower from Navigation (Stack or etc) like card inside Home
   return (
-    <View className="flex-1 justify-center items-center p-2">
-      
-      <Text className="text-white">Profile</Text>
-      <Text>Youtube</Text>
-      <TouchableHighlight onPress={() => navigation.navigate("Home")}>
-        <View className="bg-slate-600 p-2">
-          <Text>Home</Text>
+    <View className="justify-center items-center" style={{ flex: 1 }}>
+      <View className="justify-center items-center" style={{ flex: 1 }}>
+        <View className="flex flex-row  gap-4 justify-center items-center">
+          <Image
+            source={{
+              uri: "https://static.vecteezy.com/system/resources/thumbnails/023/041/976/small_2x/glass-globe-ball-with-tree-growing-and-green-nature-blur-background-eco-earth-day-concept-generat-ai-free-photo.jpg",
+            }}
+            style={{ width: "70", height: "70" }}
+          />
+          <View>
+            <Text variant="titleLarge">Username</Text>
+            <Text variant="bodyMedium">Email</Text>
+            <Text variant="bodySmall">6 Videos</Text>
+          </View>
         </View>
-      </TouchableHighlight>
+      </View>
+      <View className="justify-center items-center" style={{ flex: 1 }}>
+        <Text className="uppercase text-3xl"> Follower / Following</Text>
+      </View>
+      <View className="justify-center items-center" style={{ flex: 2 }}>
+        <Text className="uppercase text-3xl"> LIST OF Videos</Text>
+      </View>
     </View>
   );
 }
