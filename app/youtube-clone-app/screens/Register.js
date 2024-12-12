@@ -1,5 +1,12 @@
 import { View } from "react-native";
-import { Avatar, Button, Card, Text, TextInput } from "react-native-paper";
+import {
+  Avatar,
+  Button,
+  Card,
+  Text,
+  TextInput,
+  Divider,
+} from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function Register({ navigation }) {
   //get insets data for safe area padding
@@ -65,6 +72,7 @@ export default function Register({ navigation }) {
             />
           </Button>
         </Card.Actions>
+        <Divider />
         <Card.Content style={{ marginTop: "5" }}>
           <Text
             style={{ textAlign: "center", fontWeight: "bold" }}
