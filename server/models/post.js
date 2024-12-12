@@ -2,8 +2,28 @@ const { db } = require("../config/db");
 
 module.exports = class Post {
   static collection = db.collection("posts");
-
-  static async getPostById(_id) {
+  static async posts() {
+    //get data from mongodb
+    return await Post.collection
+      .aggregate([
+        {
+          //lookup to join post with user
+          $lookup: {
+            from: "users",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "author",
+          },
+        },
+        {
+          //sort date descending
+          $sort: { createdAt: -1 },
+        },
+      ])
+      //convert object instance to array
+      .toArray();
+  }
+  static async postById(_id) {
     // console.log(_id);
     try {
       const post = await Post.collection

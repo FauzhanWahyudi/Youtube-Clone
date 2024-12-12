@@ -91,7 +91,7 @@ const userResolvers = {
         _id = user._id;
       }
       //get authenticated user
-      return User.findById(_id);
+      return User.profile(_id);
     },
 
     //search user by name or username
@@ -108,8 +108,6 @@ const userResolvers = {
   Mutation: {
     //register new user
     addUser: async (parent, args) => {
-      const users = await User.findAll();
-      let user = null;
       const { username, email, password } = args.body;
 
       //check username
@@ -118,7 +116,7 @@ const userResolvers = {
       }
 
       //check if username is unique
-      user = users.find((user) => user.username === username);
+      let user = await User.findByUsername(username);
       if (user) {
         throw new Error("Username already registered");
       }
@@ -131,7 +129,7 @@ const userResolvers = {
         throw new Error("Invalid email password");
       }
       //check if email is unique
-      user = users.find((user) => user.email === email);
+      user = await User.findByEmail(email);
       if (user) {
         throw new Error("Email already registered");
       }

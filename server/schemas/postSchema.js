@@ -76,25 +76,7 @@ const postsResolvers = {
       }
 
       //get data from mongodb
-      posts = await Post.collection
-        .aggregate([
-          {
-            //lookup to join post with user
-            $lookup: {
-              from: "users",
-              localField: "authorId",
-              foreignField: "_id",
-              as: "author",
-            },
-          },
-          {
-            //sort date descending
-            $sort: { createdAt: -1 },
-          },
-        ])
-        //convert object instance to array
-        .toArray();
-      // console.log("add redis");
+      posts = await Post.posts();
 
       //convert data to string (because redis only store string)
       //and set data to cache
@@ -108,7 +90,7 @@ const postsResolvers = {
       //authenticate user
       await contextValue.auth();
 
-      return await Post.getPostById(args._id);
+      return await Post.postById(args._id);
     },
   },
 

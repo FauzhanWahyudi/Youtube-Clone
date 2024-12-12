@@ -18,58 +18,36 @@ class User {
 
   static async findById(_id) {
     try {
-      const user = await User.collection.findOne({ _id: new ObjectId(_id) });
-      const followers = await Follow.collection
-        .aggregate([
-          { $match: { followingId: user._id } },
-          {
-            $lookup: {
-              from: "users",
-              localField: "followerId",
-              foreignField: "_id",
-              as: "user",
-            },
-          },
-          {
-            $unwind: {
-              path: "$user",
-            },
-          },
-          {
-            $project: {
-              user: {
-                password: 0,
-              },
-            },
-          },
-        ])
-        .toArray();
+      return await User.collection.findOne({ _id: new ObjectId(_id) });
+    } catch (error) {
+      console.log("🚀 ~ User ~ findById ~ error:", error);
+      throw error;
+    }
+  }
 
-      const following = await Follow.collection
-        .aggregate([
-          { $match: { followerId: user._id } },
-          {
-            $lookup: {
-              from: "users",
-              localField: "followingId",
-              foreignField: "_id",
-              as: "user",
-            },
-          },
-          {
-            $unwind: {
-              path: "$user",
-            },
-          },
-          {
-            $project: {
-              user: {
-                password: 0,
-              },
-            },
-          },
-        ])
-        .toArray();
+  static async findByUsername(username) {
+    try {
+      return await User.collection.findOne({ username });
+    } catch (error) {
+      console.log("🚀 ~ User ~ findById ~ error:", error);
+      throw error;
+    }
+  }
+
+  static async findByEmail(email) {
+    try {
+      return await User.collection.findOne({ email });
+    } catch (error) {
+      console.log("🚀 ~ User ~ findById ~ error:", error);
+      throw error;
+    }
+  }
+
+  static async profile(_id) {
+    try {
+      const user = await User.findById(_id);
+      const followers = await Follow.getFollowers(user._id);
+      const following = await Follow.getFollowing(user._id);
       return {
         user,
         followers,

@@ -20,4 +20,59 @@ module.exports = class Follow {
       throw error;
     }
   }
+
+  static async getFollowers(_id) {
+    return await Follow.collection
+      .aggregate([
+        { $match: { followingId: _id } },
+        {
+          $lookup: {
+            from: "users",
+            localField: "followerId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: {
+            path: "$user",
+          },
+        },
+        {
+          $project: {
+            user: {
+              password: 0,
+            },
+          },
+        },
+      ])
+      .toArray();
+  }
+  static async getFollowing(_id) {
+    return await Follow.collection
+      .aggregate([
+        { $match: { followerId: user._id } },
+        {
+          $lookup: {
+            from: "users",
+            localField: "followingId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: {
+            path: "$user",
+          },
+        },
+        {
+          $project: {
+            user: {
+              password: 0,
+            },
+          },
+        },
+      ])
+      .toArray();
+  }
 };
