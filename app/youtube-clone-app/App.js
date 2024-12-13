@@ -1,6 +1,5 @@
 import "./global.css";
 import { ApolloProvider } from "@apollo/client";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { PaperProvider } from "react-native-paper";
 import RootStack from "./navigations/Stack";
 import {
@@ -28,11 +27,9 @@ export default function App() {
   return (
     <ApolloProvider client={client}>
       <PaperProvider theme={CombinedDarkTheme}>
-        <SafeAreaProvider>
-          <NavigationContainer theme={CombinedDarkTheme}>
-            <RootStack />
-          </NavigationContainer>
-        </SafeAreaProvider>
+        <NavigationContainer theme={CombinedDarkTheme}>
+          <RootStack />
+        </NavigationContainer>
       </PaperProvider>
     </ApolloProvider>
   );

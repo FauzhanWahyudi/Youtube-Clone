@@ -2,7 +2,6 @@ import * as SecureStore from "expo-secure-store";
 import { useMutation } from "@apollo/client";
 import { View } from "react-native";
 import { Button, Card, Text, TextInput } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LOGIN } from "../queries/login";
 import { useState } from "react";
 
@@ -10,7 +9,6 @@ export default function Login({ navigation }) {
   const [loginSubmit, { loading }] = useMutation(LOGIN);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const insets = useSafeAreaInsets();
   const login = async () => {
     console.log("login");
     const { data } = await loginSubmit({
@@ -27,15 +25,8 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <View
-      className="flex-1 justify-center items-center"
-      style={{
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-      }}
-    >
+    //flex-1 is needed because the view need to cover entire section available
+    <View className="flex-1 justify-center items-center p-safe">
       <Card className="w-5/6 justify-center" style={{ padding: "20" }}>
         <Card.Cover
           source={{

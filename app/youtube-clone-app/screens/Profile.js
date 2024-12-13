@@ -27,7 +27,10 @@ export default function Profile({ navigation }) {
       <View className="flex-1 justify-center items-center" style={{ flex: 2 }}>
         <Text className="uppercase text-3xl text-white"> LIST OF Videos</Text>
         <TouchableOpacity
-          onPress={() => SecureStore.deleteItemAsync("access_token")}
+          onPress={() => {
+            SecureStore.deleteItemAsync("access_token"),
+              navigation.navigate("Login");
+          }}
         >
           <Text className="text-white text-4xl">Log OUT</Text>
         </TouchableOpacity>

@@ -13,15 +13,8 @@ export default function Register({ navigation }) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View
-      className="flex-1 justify-center items-center"
-      style={{
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-      }}
-    >
+    //flex-1 is needed because the view need to cover entire section available
+    <View className="flex-1 justify-center items-center p-safe">
       <Card className="w-5/6 justify-center" style={{ padding: "20" }}>
         <Card.Cover
           source={{

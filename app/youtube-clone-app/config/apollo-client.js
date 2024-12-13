@@ -3,7 +3,7 @@ import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
-  uri: "https://6092-139-228-111-126.ngrok-free.app/:3000",
+  uri: "https://2e3f-139-228-111-126.ngrok-free.app/",
 });
 
 const authLink = setContext((_, { headers }) => {
