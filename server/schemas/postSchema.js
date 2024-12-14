@@ -28,7 +28,7 @@ const postsTypeDefs = `#graphql
     likes: [Like],
     createdAt: String,
     updatedAt: String,
-    author: [User]
+    author: User
   }
 
   type Query {
