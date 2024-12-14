@@ -1,7 +1,7 @@
 import "./global.css";
 import { ApolloProvider } from "@apollo/client";
 import { PaperProvider } from "react-native-paper";
-import RootStack from "./navigations/Stack";
+import RootStack from "./navigation/Stack";
 import {
   NavigationContainer,
   DarkTheme as NavigationDarkTheme,

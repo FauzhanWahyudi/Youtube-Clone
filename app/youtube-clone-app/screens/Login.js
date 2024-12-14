@@ -2,7 +2,7 @@ import * as SecureStore from "expo-secure-store";
 import { useMutation } from "@apollo/client";
 import { View } from "react-native";
 import { Button, Card, Text, TextInput } from "react-native-paper";
-import { LOGIN } from "../queries/login";
+import { LOGIN } from "../mutations/login";
 import { useState } from "react";
 
 export default function Login({ navigation }) {
@@ -10,18 +10,24 @@ export default function Login({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const login = async () => {
-    console.log("login");
-    const { data } = await loginSubmit({
-      variables: {
-        body: {
-          password: password,
-          username: username,
+    try {
+      console.log("login");
+      const { data } = await loginSubmit({
+        variables: {
+          body: {
+            password: password,
+            username: username,
+          },
         },
-      },
-    });
-    const access_token = data.login.access_token;
-    await SecureStore.setItemAsync("access_token", access_token);
-    navigation.navigate("Home");
+      });
+      const access_token = data.login.access_token;
+      if (!access_token) throw new Error("Invalid username/password");
+      await SecureStore.setItemAsync("access_token", access_token);
+      navigation.navigate("Home");
+    } catch (error) {
+      console.log("🚀 ~ login ~ error:", error);
+      // return <Text>{error}</Text>;
+    }
   };
 
   return (
@@ -63,6 +69,7 @@ export default function Login({ navigation }) {
             mode="outlined"
             value={password}
             onChangeText={setPassword}
+            secureTextEntry
           />
         </Card.Content>
         <Card.Actions style={{ marginTop: "15" }}>

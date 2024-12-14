@@ -4,6 +4,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Search from "../screens/Search";
 import Profile from "../screens/Profile";
 import CreatePost from "../screens/CreatePost";
+import { View } from "react-native";
+import { Text } from "react-native";
 const Tab = createBottomTabNavigator();
 export default function MainTab() {
   return (

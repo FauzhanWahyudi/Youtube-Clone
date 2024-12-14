@@ -3,7 +3,7 @@ import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
-  uri: "https://2e3f-139-228-111-126.ngrok-free.app/",
+  uri: "https://a1f9-182-253-48-212.ngrok-free.app/",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -21,6 +21,7 @@ const authLink = setContext((_, { headers }) => {
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
+  // refetchQueries: ["posts"],
 });
 
 export default client;

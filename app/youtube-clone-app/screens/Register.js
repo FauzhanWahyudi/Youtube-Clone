@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { View } from "react-native";
 import {
   Avatar,
@@ -11,7 +12,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function Register({ navigation }) {
   //get insets data for safe area padding
   const insets = useSafeAreaInsets();
-
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
   return (
     //flex-1 is needed because the view need to cover entire section available
     <View className="flex-1 justify-center items-center p-safe">
@@ -73,10 +78,38 @@ export default function Register({ navigation }) {
           >
             Register
           </Text>
-          <TextInput label="Name" mode="outlined" />
-          <TextInput label="Username" mode="outlined" />
-          <TextInput label="Email" mode="outlined" />
-          <TextInput label="Password" mode="outlined" />
+          <TextInput
+            label="Name"
+            mode="outlined"
+            value={name}
+            onChangeText={setName}
+          />
+          <TextInput
+            label="Username"
+            mode="outlined"
+            value={username}
+            onChangeText={setUsername}
+          />
+          <TextInput
+            label="Email"
+            mode="outlined"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            label="Password"
+            mode="outlined"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TextInput
+            label="Confirm Password"
+            mode="outlined"
+            secureTextEntry
+            value={rePassword}
+            onChangeText={setRePassword}
+          />
         </Card.Content>
         <Card.Actions style={{ marginTop: "15" }}>
           <Button

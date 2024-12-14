@@ -12,7 +12,7 @@ export const PostCard = ({ title }) => (
     <Card.Content>
       <View className="items-center">
         <Text className="text-white">{title.content}</Text>
-        <Text className="text-white">{title.author[0].username}</Text>
+        <Text className="text-white">{title.author.username}</Text>
       </View>
     </Card.Content>
   </Card>

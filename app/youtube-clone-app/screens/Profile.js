@@ -1,7 +1,12 @@
 import * as SecureStore from "expo-secure-store";
+import { useEffect } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 export default function Profile({ navigation }) {
+  useEffect(() => {
+    const access_token = SecureStore.getItem("access_token");
+    if (!access_token) navigation.navigate("Login");
+  }, []);
   return (
     <View className="flex-1 justify-center items-center">
       <View className="flex-1 justify-center items-center">
