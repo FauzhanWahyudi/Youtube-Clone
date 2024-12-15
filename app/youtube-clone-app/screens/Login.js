@@ -3,9 +3,12 @@ import { useMutation } from "@apollo/client";
 import { View } from "react-native";
 import { Button, Card, Text, TextInput } from "react-native-paper";
 import { LOGIN } from "../mutations/login";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import AuthContext from "../contexts/auth";
 
 export default function Login({ navigation }) {
+  const { setIsSignedIn } = useContext(AuthContext);
+
   const [loginSubmit, { loading }] = useMutation(LOGIN);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +26,7 @@ export default function Login({ navigation }) {
       const access_token = data.login.access_token;
       if (!access_token) throw new Error("Invalid username/password");
       await SecureStore.setItemAsync("access_token", access_token);
-      navigation.navigate("Home");
+      setIsSignedIn(true);
     } catch (error) {
       console.log("🚀 ~ login ~ error:", error);
       // return <Text>{error}</Text>;

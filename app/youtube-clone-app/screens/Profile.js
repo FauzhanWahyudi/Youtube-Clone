@@ -1,12 +1,10 @@
 import * as SecureStore from "expo-secure-store";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import AuthContext from "../contexts/auth";
 
 export default function Profile({ navigation }) {
-  useEffect(() => {
-    const access_token = SecureStore.getItem("access_token");
-    if (!access_token) navigation.navigate("Login");
-  }, []);
+  const { setIsSignedIn } = useContext(AuthContext);
   return (
     <View className="flex-1 justify-center items-center">
       <View className="flex-1 justify-center items-center">
@@ -33,8 +31,10 @@ export default function Profile({ navigation }) {
         <Text className="uppercase text-3xl text-white"> LIST OF Videos</Text>
         <TouchableOpacity
           onPress={() => {
-            SecureStore.deleteItemAsync("access_token"),
-              navigation.navigate("Login");
+            SecureStore.deleteItemAsync("access_token").then(
+              console.log("logout")
+            ),
+              setIsSignedIn(false);
           }}
         >
           <Text className="text-white text-4xl">Log OUT</Text>

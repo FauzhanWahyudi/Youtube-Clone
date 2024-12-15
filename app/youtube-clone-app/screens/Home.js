@@ -18,11 +18,6 @@ function TouchableCard({ title, navigation }) {
 export default function Home({ navigation }) {
   const { loading, data, error } = useQuery(GET_POSTS);
 
-  useEffect(() => {
-    const access_token = SecureStore.getItem("access_token");
-    if (!access_token) navigation.navigate("Login");
-  }, []);
-
   //because if return before useEffect react will throw error that hooks quantity is not same in same function
   if (loading) return <Text className="text-white">Loading...</Text>;
   if (error) return <Text className="text-white">{error.message}</Text>;
