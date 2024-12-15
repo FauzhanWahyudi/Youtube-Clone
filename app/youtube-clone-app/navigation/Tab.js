@@ -33,13 +33,24 @@ export default function MainTab({ navigation }) {
         name="Home"
         component={Home}
         options={{
-          title: "Youtube",
+          title: "",
+          headerTitle: () => (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons
+                name="logo-youtube"
+                size={30}
+                color="red"
+                style={{ marginRight: 8 }}
+              />
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>YouTube</Text>
+            </View>
+          ),
           headerRight: () => (
             <TouchableOpacity
               onPress={() => navigation.navigate("Search")}
-              className="mr-2"
+              style={{ marginRight: 15 }}
             >
-              <Ionicons name={"search"} size={25} color={"black"} />
+              <Ionicons name="search" size={25} color="black" />
             </TouchableOpacity>
           ),
         }}
@@ -49,6 +60,25 @@ export default function MainTab({ navigation }) {
         component={Home}
         options={{
           title: "Shorts",
+          headerTitle: () => (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons
+                name="logo-youtube"
+                size={30}
+                color="red"
+                style={{ marginRight: 8 }}
+              />
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>Shorts</Text>
+            </View>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Search")}
+              style={{ marginRight: 15 }}
+            >
+              <Ionicons name="search" size={25} color="black" />
+            </TouchableOpacity>
+          ),
         }}
       />
       <Tab.Screen
@@ -56,8 +86,44 @@ export default function MainTab({ navigation }) {
         component={CreatePost}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="Subscriptions" component={Subscriptions} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen
+        name="Subscriptions"
+        component={Subscriptions}
+        options={{
+          title: "Subscriptions",
+          headerTitle: () => (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons
+                name="logo-youtube"
+                size={30}
+                color="red"
+                style={{ marginRight: 8 }}
+              />
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                Subscriptions
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          title: "Profile",
+          headerTitle: () => (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons
+                name="logo-youtube"
+                size={30}
+                color="red"
+                style={{ marginRight: 8 }}
+              />
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>Profile</Text>
+            </View>
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 }

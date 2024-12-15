@@ -1,4 +1,6 @@
 import * as SecureStore from "expo-secure-store";
+import Toast from "react-native-toast-message";
+
 import { use, useContext, useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View, ScrollView } from "react-native";
 import AuthContext from "../contexts/auth";
@@ -8,24 +10,34 @@ import ProfileContext from "../contexts/profile";
 
 // ProfilePage Component
 export default function Profile({ route }) {
-  const { profile, setProfile, refetch } = useContext(ProfileContext);
+  const { profile, setProfile, refetch, loading } = useContext(ProfileContext);
   const { setIsSignedIn } = useContext(AuthContext);
   const { user, followers } = profile;
   const [isLoggingOut, setIsLoggingOut] = useState(false); // State to track logout progress
   useEffect(() => {
     refetch().then((data) => setProfile(data?.data?.user));
   }, [profile, refetch]);
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      await SecureStore.deleteItemAsync("access_token"); // Clear auth token
-      setIsSignedIn(false); // Call logout function from AuthContext
+      await SecureStore.deleteItemAsync("access_token");
+      Toast.show({
+        type: "success",
+        text1: "Logged Out",
+        text2: "You have been logged out successfully.",
+      });
+      setIsSignedIn(false);
     } catch (error) {
-      console.error("Error logging out:", error);
-    } finally {
-      setIsLoggingOut(false);
+      Toast.show({
+        type: "error",
+        text1: "Logout Failed",
+        text2: error.message,
+      });
     }
   };
+
+  if (!profile?.user) return <Text>Loading...</Text>;
 
   return (
     <ScrollView className="flex-1 p-4 bg-gray-100">

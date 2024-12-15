@@ -1,4 +1,5 @@
 import "./global.css";
+import Toast from "react-native-toast-message";
 import * as SecureStore from "expo-secure-store";
 import { ApolloProvider } from "@apollo/client";
 import { PaperProvider } from "react-native-paper";
@@ -42,6 +43,7 @@ export default function App() {
           </NavigationContainer>
         </PaperProvider>
       </ApolloProvider>
+      <Toast />
     </AuthContext.Provider>
   );
 }

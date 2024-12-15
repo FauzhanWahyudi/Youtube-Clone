@@ -1,12 +1,12 @@
 import * as SecureStore from "expo-secure-store";
+import Toast from "react-native-toast-message";
+
 import { useMutation, useQuery } from "@apollo/client";
 import { View } from "react-native";
 import { Button, Card, Text, TextInput } from "react-native-paper";
 import { LOGIN } from "../mutations/login";
 import { useContext, useState } from "react";
 import AuthContext from "../contexts/auth";
-import ProfileContext from "../contexts/profile";
-import { GET_PROFILE } from "../queries/users";
 
 export default function Login({ navigation }) {
   const { setIsSignedIn } = useContext(AuthContext);
@@ -16,22 +16,27 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
   const login = async () => {
     try {
-      console.log("login");
       const { data } = await loginSubmit({
         variables: {
-          body: {
-            password,
-            username,
-          },
+          body: { username, password },
         },
       });
       const access_token = data.login.access_token;
       if (!access_token) throw new Error("Invalid username/password");
       await SecureStore.setItemAsync("access_token", access_token);
       setIsSignedIn(true);
+      Toast.show({
+        type: "success",
+        text1: "Login Successful",
+        text2: "Welcome back!",
+      });
     } catch (error) {
-      console.log("🚀 ~ login ~ error:", error);
-      // return <Text>{error}</Text>;
+      // console.log("🚀 ~ login ~ error:", error);
+      Toast.show({
+        type: "error",
+        text1: "Login Failed",
+        text2: error.message,
+      });
     }
   };
 

@@ -10,6 +10,7 @@ import ProfileContext from "../contexts/profile";
 import OtherProfile from "../screens/OtherProfile";
 import { useQuery } from "@apollo/client";
 import { GET_PROFILE } from "../queries/users";
+import { Text } from "react-native-paper";
 
 const Stack = createNativeStackNavigator();
 export default function RootStack() {
@@ -22,9 +23,12 @@ export default function RootStack() {
   useEffect(() => {
     setProfile(data?.user);
   }, []);
+  if (loading) return <Text>Loading</Text>;
 
   return (
-    <ProfileContext.Provider value={{ profile, setProfile, refetch }}>
+    <ProfileContext.Provider
+      value={{ profile, setProfile, refetch, loading, error }}
+    >
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
         initialRouteName={isSignedIn ? "MainTab" : "Login"}

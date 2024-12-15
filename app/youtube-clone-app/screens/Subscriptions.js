@@ -8,13 +8,14 @@ import ProfileContext from "../contexts/profile";
 
 // ProfilePage Component
 export default function Subscriptions({ route }) {
-  const { profile, setProfile, refetch } = useContext(ProfileContext);
-  const following = profile.following;
+  const { profile, setProfile, refetch, loading } = useContext(ProfileContext);
+  if (loading) return <Text>Loading</Text>;
+  const following = profile?.following;
 
   // const { data, loading, error, refetch } = useQuery(GET_PROFILE);
   useEffect(() => {
     refetch().then((data) => setProfile(data?.data?.user));
-  }, [profile.following]);
+  }, [following]);
   return (
     <ScrollView className="flex-1 p-4 bg-gray-100">
       {following ? (

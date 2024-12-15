@@ -9,62 +9,158 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import ProfileContext from "../contexts/profile";
+import Toast from "react-native-toast-message";
 
-// SearchPage Component
 export default function Search({ navigation }) {
   const { setProfile, refetch } = useContext(ProfileContext);
   const [search, setSearch] = useState("");
   const { data, loading, error } = useQuery(SEARCH_USER, {
     variables: { search },
+    onError: (err) => {
+      Toast.show({
+        type: "error",
+        text1: "Search Error",
+        text2: err.message,
+      });
+    },
   });
-  const [addFollowing] = useMutation(AddFollowing);
+  const [addFollowing] = useMutation(AddFollowing, {
+    onCompleted: (data) => {
+      // console.log(data);
+      Toast.show({
+        type: "success",
+        text1: "Followed",
+        text2: "You have successfully followed the user.",
+      });
+    },
+    onError: (err) => {
+      Toast.show({
+        type: "error",
+        text1: "Follow Error",
+        text2: err.message,
+      });
+    },
+  });
 
   const handleFollow = (userId) => {
     addFollowing({ variables: { body: { followingId: userId } } });
-    refetch().then((data) => setProfile(data?.data?.user));
+    refetch().then((data) => setProfile(data.data.user));
     navigation.navigate("Subscriptions");
   };
 
   return (
-    <ScrollView className="flex-1 p-safe bg-gray-100">
+    <ScrollView style={styles.container} contentContainerClassName="p-safe">
+      <Text style={styles.title}>Find Users</Text>
       <TextInput
-        placeholder="Search users"
+        placeholder="Search for users..."
         value={search}
         onChangeText={setSearch}
-        className="border p-2 rounded mb-4"
+        style={styles.input}
       />
       {loading && (
-        <ActivityIndicator size="large" className="flex-1 justify-center" />
+        <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
       )}
-      {error && <Text>Error: {error.message}</Text>}
-      {data?.searchUser.length === 0 ? (
-        <Text className="text-gray-500">No users found.</Text>
+      {error && (
+        <Text style={styles.errorText}>An error occurred: {error.message}</Text>
+      )}
+      {data?.searchUser?.length === 0 ? (
+        <Text style={styles.noResultText}>No users found.</Text>
       ) : (
-        data?.searchUser.map((user) => (
-          <View
-            key={user._id}
-            className="mt-2 border-b border-gray-300 pb-2 flex-row justify-between w-full"
-          >
+        data?.searchUser?.map((user) => (
+          <View key={user._id} style={styles.userCard}>
             <TouchableOpacity
-              className="ml-3"
+              style={styles.userInfo}
               onPress={() =>
                 navigation.navigate("OtherProfile", { _id: user._id })
               }
             >
-              <Text className="font-bold">{user.username}</Text>
-              <Text>{user.email}</Text>
+              <Text style={styles.username}>{user.username}</Text>
+              <Text style={styles.email}>{user.email}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => handleFollow(user._id)}
-              className="mt-2 bg-blue-500 p-2 rounded mr-3"
+              style={styles.followButton}
             >
-              <Text className="text-white">Follow</Text>
+              <Text style={styles.followText}>Follow</Text>
             </TouchableOpacity>
           </View>
         ))
       )}
+      <Toast />
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#f9f9f9",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+    textAlign: "center",
+    color: "#333",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 16,
+    backgroundColor: "#fff",
+  },
+  loader: {
+    marginVertical: 20,
+  },
+  errorText: {
+    color: "#ff0000",
+    textAlign: "center",
+    marginVertical: 8,
+  },
+  noResultText: {
+    textAlign: "center",
+    color: "#999",
+    marginTop: 20,
+  },
+  userCard: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  userInfo: {
+    flex: 1,
+  },
+  username: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  email: {
+    fontSize: 14,
+    color: "#555",
+    marginTop: 4,
+  },
+  followButton: {
+    backgroundColor: "#007bff",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  followText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+});

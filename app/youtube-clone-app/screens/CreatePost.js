@@ -1,4 +1,5 @@
 // CreatePost.js
+import Toast from "react-native-toast-message";
 import * as SecureStore from "expo-secure-store";
 import { TouchableOpacity, Image, View, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
@@ -25,14 +26,29 @@ export default function CreatePost({ navigation }) {
     await addPost({
       variables: {
         body: {
-          content: title + " \n " + description,
+          content: title ? title + " \n " + description : "",
           imgUrl: thumbnail,
           tags: tags.split(","),
         },
       },
       refetchQueries: [{ query: GET_POSTS, awaitRefetchQueries: true }],
-    });
-    navigation.navigate("Home");
+    })
+      .then(() => {
+        Toast.show({
+          type: "success",
+          text1: "Upload Video",
+        });
+      })
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: "Upload Video Failed",
+          text2: error.message,
+        });
+      })
+      .finally(() => {
+        navigation.navigate("Home");
+      });
   };
   const tagSplit = tags.split(",");
   return (
