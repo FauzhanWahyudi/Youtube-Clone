@@ -16,7 +16,7 @@ function TouchableCard({ item, navigation }) {
 }
 
 export default function Home({ navigation }) {
-  const { loading, data, error } = useQuery(GET_POSTS);
+  const { loading, data, error, refetch } = useQuery(GET_POSTS);
 
   if (loading)
     return <Text className="text-center text-white">Loading...</Text>;

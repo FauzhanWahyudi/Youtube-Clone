@@ -14,7 +14,7 @@ import ProfileContext from "../contexts/profile";
 
 // SearchPage Component
 export default function Search({ navigation }) {
-  const profileContext = useContext(ProfileContext);
+  const { setProfile, refetch } = useContext(ProfileContext);
   const [search, setSearch] = useState("");
   const { data, loading, error } = useQuery(SEARCH_USER, {
     variables: { search },
@@ -23,8 +23,7 @@ export default function Search({ navigation }) {
 
   const handleFollow = (userId) => {
     addFollowing({ variables: { body: { followingId: userId } } });
-    profileContext.refetch();
-    profileContext.setProfile(profileContext.data.user);
+    refetch().then((data) => setProfile(data.data.user));
     navigation.navigate("Subscriptions");
   };
 

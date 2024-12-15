@@ -1,7 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { GET_POSTS } from "../queries/posts";
 
 const httpLink = createHttpLink({
   uri: "https://youtube-clone-server.fauzhanwahyudi.com/",

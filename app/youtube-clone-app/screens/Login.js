@@ -1,10 +1,12 @@
 import * as SecureStore from "expo-secure-store";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { View } from "react-native";
 import { Button, Card, Text, TextInput } from "react-native-paper";
 import { LOGIN } from "../mutations/login";
 import { useContext, useState } from "react";
 import AuthContext from "../contexts/auth";
+import ProfileContext from "../contexts/profile";
+import { GET_PROFILE } from "../queries/users";
 
 export default function Login({ navigation }) {
   const { setIsSignedIn } = useContext(AuthContext);
@@ -82,7 +84,7 @@ export default function Login({ navigation }) {
             onPress={() => {
               login();
             }}
-            textColor="#1c1c1c"
+            textColor=""
             style={{ flex: 1 }}
             contentStyle={{ width: "100%" }}
           >
@@ -97,7 +99,6 @@ export default function Login({ navigation }) {
               console.log("register");
               navigation.navigate("Register");
             }}
-            textColor="#ffff"
             style={{ flex: 1 }}
             contentStyle={{ width: "100%" }}
           >

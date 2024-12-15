@@ -68,7 +68,7 @@ export default function Register({ navigation }) {
             <Avatar.Icon
               icon="google"
               size={50}
-              color="#ffff"
+              color="#000"
               style={{ backgroundColor: "none" }}
             />
           </Button>
@@ -76,7 +76,7 @@ export default function Register({ navigation }) {
             <Avatar.Icon
               icon="github"
               size={50}
-              color="#ffff"
+              color="#000"
               style={{ backgroundColor: "none" }}
             />
           </Button>
@@ -84,7 +84,7 @@ export default function Register({ navigation }) {
             <Avatar.Icon
               icon="facebook"
               size={50}
-              color="#ffff"
+              color="#000"
               style={{ backgroundColor: "none" }}
             />
           </Button>
@@ -135,7 +135,7 @@ export default function Register({ navigation }) {
             icon="account-plus-outline"
             mode="contained"
             onPress={addUserSubmit}
-            textColor="#1c1c1c"
+            textColor=""
             style={{ flex: 1 }}
             contentStyle={{ width: "100%" }}
           >

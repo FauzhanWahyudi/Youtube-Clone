@@ -14,17 +14,22 @@ import { Image } from "react-native";
 import timeSince from "../helpers/formatAgo";
 import { AddLike } from "../mutations/AddLike";
 import { AddComment } from "../mutations/AddComments";
-import { useContext, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import ProfileContext from "../contexts/profile";
+import AuthContext from "../contexts/auth";
 
 // PostDetail Component
 export default function PostDetail({ navigation, route }) {
+  const { isSignedIn } = useContext(AuthContext);
   const { postId } = route.params;
   const { data, loading, error, refetch } = useQuery(GET_POST, {
     variables: { id: postId },
   });
   const [addLike] = useMutation(AddLike);
   const [isLiked, setIsliked] = useState(false);
+  useEffect(() => {
+    setIsliked(false);
+  }, [isSignedIn]);
   const [addComment] = useMutation(AddComment);
   const [newComment, setNewComment] = useState("");
   const { profile } = useContext(ProfileContext);
@@ -34,7 +39,7 @@ export default function PostDetail({ navigation, route }) {
 
   const { post } = data || {};
   const isLikedCheck = () => {
-    if (!post.likes) return;
+    if (!post.likes) return false;
     return post.likes.some((like) => {
       return like.username === profile.user.username;
     });
