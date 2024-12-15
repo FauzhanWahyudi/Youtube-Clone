@@ -18,9 +18,9 @@ export default function RootStack() {
 
   const { data, loading, error, refetch } = useQuery(GET_PROFILE);
   const [profile, setProfile] = useState({});
-  console.log(data.user.user);
+  console.log(data?.user?.user);
   useEffect(() => {
-    setProfile(data.user);
+    setProfile(data?.user);
   }, []);
 
   return (

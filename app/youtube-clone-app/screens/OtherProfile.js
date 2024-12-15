@@ -25,7 +25,7 @@ export default function OtherProfile({ route }) {
   if (error) return <Text>Error: {error.message}</Text>;
 
   console.log(data.user);
-  const { user, followers, following } = data.user;
+  const { user, followers, following } = data?.user;
   console.log(user);
   return (
     <View className="p-safe flex-1">

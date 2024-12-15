@@ -13,7 +13,7 @@ export default function Subscriptions({ route }) {
 
   // const { data, loading, error, refetch } = useQuery(GET_PROFILE);
   useEffect(() => {
-    refetch().then((data) => setProfile(data.data.user));
+    refetch().then((data) => setProfile(data?.data?.user));
   }, [profile.following]);
   return (
     <ScrollView className="flex-1 p-4 bg-gray-100">

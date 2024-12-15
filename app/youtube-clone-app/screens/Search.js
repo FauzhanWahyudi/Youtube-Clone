@@ -23,7 +23,7 @@ export default function Search({ navigation }) {
 
   const handleFollow = (userId) => {
     addFollowing({ variables: { body: { followingId: userId } } });
-    refetch().then((data) => setProfile(data.data.user));
+    refetch().then((data) => setProfile(data?.data?.user));
     navigation.navigate("Subscriptions");
   };
 

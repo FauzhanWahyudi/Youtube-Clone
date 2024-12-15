@@ -13,7 +13,7 @@ export default function Profile({ route }) {
   const { user, followers } = profile;
   const [isLoggingOut, setIsLoggingOut] = useState(false); // State to track logout progress
   useEffect(() => {
-    refetch().then((data) => setProfile(data.data.user));
+    refetch().then((data) => setProfile(data?.data?.user));
   }, [profile, refetch]);
   const handleLogout = async () => {
     setIsLoggingOut(true);
