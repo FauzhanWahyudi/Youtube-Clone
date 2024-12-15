@@ -102,6 +102,25 @@ module.exports = class Post {
     }
   }
 
+  static async disLike(body) {
+    try {
+      const { postId, username } = body;
+
+      await Post.collection.updateOne(
+        { _id: new ObjectId(postId) },
+        {
+          $pull: {
+            likes: { username },
+          },
+        }
+      );
+      return "Success remove like";
+    } catch (error) {
+      console.log("🚀 ~ Post ~ addLike ~ error:", error);
+      throw error;
+    }
+  }
+
   static async addComment(body) {
     try {
       const { postId, username, content } = body;

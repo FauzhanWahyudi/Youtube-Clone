@@ -56,6 +56,7 @@ const postsTypeDefs = `#graphql
     addPost(body:PostForm!):Post
     addComment(body:CommentForm!):Comment
     addLike(body:LikeForm):Like
+    disLike(body:LikeForm):String
   }
 `;
 
@@ -139,6 +140,14 @@ const postsResolvers = {
       const { user } = await contextValue.auth();
       args.body.username = user.username;
       return await Post.addLike(args.body);
+    },
+
+    //change like to dislike to specific post
+    disLike: async (parent, args, contextValue) => {
+      //get authenticated user
+      const { user } = await contextValue.auth();
+      args.body.username = user.username;
+      return await Post.disLike(args.body);
     },
   },
 };
