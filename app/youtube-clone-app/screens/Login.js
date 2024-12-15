@@ -18,8 +18,8 @@ export default function Login({ navigation }) {
       const { data } = await loginSubmit({
         variables: {
           body: {
-            password: password,
-            username: username,
+            password,
+            username,
           },
         },
       });

@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import { useState } from "react";
 import { View } from "react-native";
 import {
@@ -9,7 +10,10 @@ import {
   Divider,
 } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AddUser } from "../mutations/AddUser";
+
 export default function Register({ navigation }) {
+  const [addUserMutation, { loading, error, data }] = useMutation(AddUser);
   //get insets data for safe area padding
   const insets = useSafeAreaInsets();
   const [name, setName] = useState("");
@@ -17,6 +21,21 @@ export default function Register({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+
+  const addUserSubmit = async () => {
+    try {
+      console.log(name, username, email, password);
+      if (password !== rePassword) throw new Error("Password not matched");
+      await addUserMutation({
+        variables: { body: { name, username, email, password } },
+      });
+      if (error) return console.log("error", error);
+      navigation.navigate("Login");
+    } catch (error) {
+      console.log("🚀 ~ addUserSubmit ~ error:", error);
+    }
+  };
+
   return (
     //flex-1 is needed because the view need to cover entire section available
     <View className="flex-1 justify-center items-center p-safe">
@@ -115,12 +134,12 @@ export default function Register({ navigation }) {
           <Button
             icon="account-plus-outline"
             mode="contained"
-            onPress={() => console.log("Register")}
+            onPress={addUserSubmit}
             textColor="#1c1c1c"
             style={{ flex: 1 }}
             contentStyle={{ width: "100%" }}
           >
-            Register
+            {loading ? "...Submitting" : "Register"}
           </Button>
         </Card.Actions>
       </Card>
