@@ -1,6 +1,13 @@
 import * as SecureStore from "expo-secure-store";
 import { useContext, useEffect } from "react";
-import { Image, Text, TouchableOpacity, View, ScrollView } from "react-native";
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import AuthContext from "../contexts/auth";
 import { useQuery } from "@apollo/client";
 import { GET_PROFILE } from "../queries/users";
@@ -9,13 +16,20 @@ import ProfileContext from "../contexts/profile";
 // ProfilePage Component
 export default function Subscriptions({ route }) {
   const { profile, setProfile, refetch, loading } = useContext(ProfileContext);
-  if (loading) return <Text>Loading</Text>;
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text className="text-center">...Loading</Text>
+      </View>
+    );
+  }
   const following = profile?.following;
-
   // const { data, loading, error, refetch } = useQuery(GET_PROFILE);
   useEffect(() => {
     refetch().then((data) => setProfile(data?.data?.user));
   }, [following]);
+
   return (
     <ScrollView className="flex-1 p-4 bg-gray-100">
       {following ? (

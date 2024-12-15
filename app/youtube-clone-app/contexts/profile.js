@@ -1,6 +1,6 @@
 import { createContext } from "react";
 const ProfileContext = createContext({
-  profile: false,
+  profile: { user: {}, following: {}, followers: {} },
   setProfile: () => {},
 });
 

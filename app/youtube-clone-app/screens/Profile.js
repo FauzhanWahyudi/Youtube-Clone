@@ -2,7 +2,14 @@ import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
 
 import { use, useContext, useEffect, useState } from "react";
-import { Image, Text, TouchableOpacity, View, ScrollView } from "react-native";
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import AuthContext from "../contexts/auth";
 import { useQuery } from "@apollo/client";
 import { GET_PROFILE } from "../queries/users";
@@ -12,11 +19,20 @@ import ProfileContext from "../contexts/profile";
 export default function Profile({ route }) {
   const { profile, setProfile, refetch, loading } = useContext(ProfileContext);
   const { setIsSignedIn } = useContext(AuthContext);
-  const { user, followers } = profile;
-  const [isLoggingOut, setIsLoggingOut] = useState(false); // State to track logout progress
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text className="text-center">...Loading</Text>
+      </View>
+    );
+  }
   useEffect(() => {
     refetch().then((data) => setProfile(data?.data?.user));
   }, [profile, refetch]);
+
+  const { user, followers } = profile;
+  const [isLoggingOut, setIsLoggingOut] = useState(false); // State to track logout progress
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -36,8 +52,6 @@ export default function Profile({ route }) {
       });
     }
   };
-
-  if (!profile?.user) return <Text>Loading...</Text>;
 
   return (
     <ScrollView className="flex-1 p-4 bg-gray-100">

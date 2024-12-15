@@ -11,6 +11,8 @@ import OtherProfile from "../screens/OtherProfile";
 import { useQuery } from "@apollo/client";
 import { GET_PROFILE } from "../queries/users";
 import { Text } from "react-native-paper";
+import { View } from "react-native";
+import Toast from "react-native-toast-message";
 
 const Stack = createNativeStackNavigator();
 export default function RootStack() {
@@ -23,7 +25,12 @@ export default function RootStack() {
   useEffect(() => {
     setProfile(data?.user);
   }, []);
-  if (loading) return <Text>Loading</Text>;
+  if (loading)
+    return (
+      <View className="flex-1 justify-center items-center">
+        <Text className="text-center">...Loading</Text>
+      </View>
+    );
 
   return (
     <ProfileContext.Provider
@@ -47,6 +54,7 @@ export default function RootStack() {
           </>
         )}
       </Stack.Navigator>
+      <Toast />
     </ProfileContext.Provider>
   );
 }
