@@ -42,6 +42,11 @@ module.exports = class Post {
               as: "author",
             },
           },
+          {
+            $unwind: {
+              path: "$author",
+            },
+          },
         ])
         .toArray();
       return post[0];

@@ -89,7 +89,7 @@ const postsResolvers = {
     post: async (parent, args, contextValue) => {
       //authenticate user
       await contextValue.auth();
-
+      // console.log(args._id);
       return await Post.postById(args._id);
     },
   },
