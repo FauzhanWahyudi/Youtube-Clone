@@ -4,7 +4,7 @@ import { setContext } from "@apollo/client/link/context";
 import { GET_POSTS } from "../queries/posts";
 
 const httpLink = createHttpLink({
-  uri: "https://a1f9-182-253-48-212.ngrok-free.app/",
+  uri: "https://youtube-clone-server.fauzhanwahyudi.com/",
 });
 
 const authLink = setContext((_, { headers }) => {
