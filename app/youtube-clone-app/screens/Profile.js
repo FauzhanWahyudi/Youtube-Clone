@@ -1,45 +1,43 @@
 import * as SecureStore from "expo-secure-store";
 import { useContext, useEffect } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View, ScrollView } from "react-native";
 import AuthContext from "../contexts/auth";
+import { useQuery } from "@apollo/client";
+import { GET_PROFILE } from "../queries/users";
+import ProfileContext from "../contexts/profile";
 
-export default function Profile({ navigation }) {
-  const { setIsSignedIn } = useContext(AuthContext);
+// ProfilePage Component
+export default function Profile({ route }) {
+  const { profile } = useContext(ProfileContext);
+  const { user, followers } = profile;
+
   return (
-    <View className="flex-1 justify-center items-center">
-      <View className="flex-1 justify-center items-center">
-        <View className="flex flex-row  gap-4 justify-center items-center">
-          <Image
-            source={{
-              uri: "https://static.vecteezy.com/system/resources/thumbnails/023/041/976/small_2x/glass-globe-ball-with-tree-growing-and-green-nature-blur-background-eco-earth-day-concept-generat-ai-free-photo.jpg",
-            }}
-            style={{ width: "70", height: "70" }}
-          />
-          <View>
-            <Text className="text-white">Username</Text>
-            <Text className="text-white"> Email</Text>
-            <Text className="text-white">6 Videos</Text>
+    <ScrollView className="flex-1 p-4 bg-gray-100">
+      {user && (
+        <>
+          <View className="bg-white rounded shadow p-4">
+            <Text className="text-2xl font-bold">
+              {user.name} (@{user.username})
+            </Text>
+            <Text className="text-gray-600">{user.email}</Text>
           </View>
-        </View>
-      </View>
-      <View className="flex-1 justify-center items-center">
-        <Text className="uppercase text-3xl text-white">
-          Follower / Following
-        </Text>
-      </View>
-      <View className="flex-1 justify-center items-center" style={{ flex: 2 }}>
-        <Text className="uppercase text-3xl text-white"> LIST OF Videos</Text>
-        <TouchableOpacity
-          onPress={() => {
-            SecureStore.deleteItemAsync("access_token").then(
-              console.log("logout")
-            ),
-              setIsSignedIn(false);
-          }}
-        >
-          <Text className="text-white text-4xl">Log OUT</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          <View className="mt-4 bg-white rounded shadow p-4">
+            <Text className="text-lg font-bold">
+              Subscribers ({followers ? followers.length : "0"}):
+            </Text>
+            {followers.length === 0 ? (
+              <Text className="text-gray-500">No subscribers yet.</Text>
+            ) : (
+              followers.map((follower) => (
+                <View key={follower._id} className="mt-2">
+                  <Text className="font-bold">{follower.user.username}</Text>
+                  <Text>{follower.user.email}</Text>
+                </View>
+              ))
+            )}
+          </View>
+        </>
+      )}
+    </ScrollView>
   );
 }

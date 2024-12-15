@@ -1,43 +1,27 @@
+// CreatePost.js
 import * as SecureStore from "expo-secure-store";
-import {
-  Text,
-  TouchableHighlight,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { TouchableOpacity, Image, View, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
-import { TextInput } from "react-native-paper";
+import { TextInput, Text } from "react-native-paper";
 import DescModal from "../components/DescModal";
 import TagModal from "../components/TagModal";
 import ThumbnailModal from "../components/ThumbnailModal";
 import { useMutation } from "@apollo/client";
 import { AddPost } from "../mutations/AddPost";
-import { GET_POST } from "../queries/posts";
+import { GET_POSTS } from "../queries/posts";
 
 export default function CreatePost({ navigation }) {
-  //check user
-  useEffect(() => {
-    const access_token = SecureStore.getItem("access_token");
-    console.log("access_token :", access_token);
-    if (!access_token) navigation.navigate("Login");
-  }, []);
-
-  //modal toggle
   const [visible, toggleModal] = useState(false);
   const [visibleTagModal, toggleTagModal] = useState(false);
   const [visibleThumbnailModal, toggleThumbnailModal] = useState(false);
-
-  //input
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
   const [thumbnail, setThumbnail] = useState("");
 
-  const [addPost, { data, loading, error }] = useMutation(AddPost);
+  const [addPost, { loading, error }] = useMutation(AddPost);
 
   const uploadPost = async () => {
-    console.log(title, description, tags, thumbnail);
     await addPost({
       variables: {
         body: {
@@ -46,68 +30,89 @@ export default function CreatePost({ navigation }) {
           tags: tags.split(","),
         },
       },
-      refetchQueries: [GET_POST],
+      refetchQueries: [{ query: GET_POSTS, awaitRefetchQueries: true }],
     });
     navigation.navigate("Home");
   };
-
-  if (loading) return <Text>...loading</Text>;
-  if (error) return <Text>...error {error}</Text>;
-  console.log("data", data);
-
+  const tagSplit = tags.split(",");
   return (
-    <View className="flex-1">
-      <View className="flex-grow-[1] flex-row justify-between w-full bg-emerald-600">
-        <Text>Header</Text>
-        <TouchableOpacity className="bg-purple-50" onPress={uploadPost}>
-          <Text>Next</Text>
+    <View className="flex-1 p-safe">
+      {/* Header */}
+      <View className="bg-slate-200 p-4 flex-row justify-between items-center">
+        <Text className="text-white text-lg">Create a New Post</Text>
+        <TouchableOpacity
+          className="bg-red-600 px-4 py-2 rounded-full"
+          onPress={uploadPost}
+        >
+          <Text style={{ color: "white" }}>Publish</Text>
         </TouchableOpacity>
       </View>
-      <View className="flex-grow-[3] bg-red-600">
-        <Text>Video Preview</Text>
-        <Text>{thumbnail}</Text>
-      </View>
-      <View className="flex-grow-[1] bg-yellow-600">
-        <Text>Title</Text>
+
+      {/* Thumbnail Section */}
+      <TouchableOpacity
+        onPress={toggleThumbnailModal}
+        className="bg-gray-300 h-56 justify-center items-center"
+      >
+        {thumbnail ? (
+          <Image
+            source={{ uri: thumbnail }}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <Text className="text-gray-100">Add Thumbnail</Text>
+        )}
+      </TouchableOpacity>
+
+      {/* Title Input */}
+      <View className="p-4">
+        <Text className="text-gray-100 mb-1">Title</Text>
         <TextInput
           label="Title"
-          placeholder="create a title (type @ to mention a channel)"
+          placeholder="Enter a title"
           value={title}
           onChangeText={setTitle}
-        ></TextInput>
+          className="bg-gray-200 text-white"
+        />
       </View>
-      <View className="flex-grow-[3] bg-purple-600">
-        <TouchableOpacity
-          className="flex-grow-[1] bg-purple-50"
-          onPress={toggleModal}
-        >
-          <Text>Description</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="flex-grow-[1] bg-purple-100"
-          onPress={toggleTagModal}
-        >
-          <Text>Tags</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="flex-grow-[1] bg-purple-200"
-          onPress={toggleThumbnailModal}
-        >
-          <Text>Thumbnails</Text>
-        </TouchableOpacity>
-        <View className="flex-grow-[1] bg-purple-250">
-          <Text>Visibility</Text>
-        </View>
-        <View className="flex-grow-[1] bg-purple-350">
-          <Text>Location</Text>
-        </View>
-        <View className="flex-grow-[1] bg-purple-500">
-          <Text>Add to playlists</Text>
-        </View>
-        <View className="flex-grow-[1] bg-purple-600">
-          <Text>Add paid promotion label</Text>
-        </View>
-      </View>
+
+      {/* Description */}
+      <TouchableOpacity
+        onPress={toggleModal}
+        className="p-4 border-b border-gray-700"
+      >
+        {description ? (
+          <>
+            <Text className="text-white">Description</Text>
+            <Text className="text-white" variant="labelSmall">
+              {description}
+            </Text>
+          </>
+        ) : (
+          <Text className="text-white">Add Description</Text>
+        )}
+      </TouchableOpacity>
+
+      {/* Tags */}
+      <TouchableOpacity
+        onPress={toggleTagModal}
+        className="p-4 border-b border-gray-700"
+      >
+        {tags ? (
+          <>
+            <Text className="text-white">Tags</Text>
+            <View className="flex-row flex-wrap mb-3">
+              {tagSplit.map((tag, index) => (
+                <Text key={index} className="text-blue-400 text-sm mr-2">
+                  #{tag}
+                </Text>
+              ))}
+            </View>
+          </>
+        ) : (
+          <Text className="text-white">Add Tags</Text>
+        )}
+      </TouchableOpacity>
+
       <DescModal
         visible={visible}
         toggleModal={toggleModal}

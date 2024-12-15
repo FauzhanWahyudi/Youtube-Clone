@@ -10,7 +10,7 @@ import {
 
 const DescModal = ({ visible, toggleModal, setDescription, description }) => {
   const containerStyle = {
-    backgroundColor: "#3B1C32",
+    backgroundColor: "#ffff",
     padding: 20,
     margin: "10",
   };

@@ -31,8 +31,8 @@ export const GET_POSTS = gql`
 `;
 
 export const GET_POST = gql`
-  query Posts {
-    posts {
+  query Post($id: ID!) {
+    post(_id: $id) {
       _id
       content
       tags
@@ -52,10 +52,10 @@ export const GET_POST = gql`
       createdAt
       updatedAt
       author {
-        _id
-        name
         username
+        name
         email
+        _id
       }
     }
   }

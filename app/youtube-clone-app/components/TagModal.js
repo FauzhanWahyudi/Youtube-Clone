@@ -10,7 +10,7 @@ import {
 
 const TagModal = ({ visibleTagModal, toggleTagModal, setTags, tags }) => {
   const containerStyle = {
-    backgroundColor: "#3B1C32",
+    backgroundColor: "#ffff",
     padding: 20,
     margin: "10",
   };

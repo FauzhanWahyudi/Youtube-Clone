@@ -1,13 +1,13 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Search from "../screens/Search";
 import Profile from "../screens/Profile";
 import CreatePost from "../screens/CreatePost";
-import { View } from "react-native";
+import { Touchable, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native";
+import Subscriptions from "../screens/Subscriptions";
 const Tab = createBottomTabNavigator();
-export default function MainTab() {
+export default function MainTab({ navigation }) {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -29,14 +29,34 @@ export default function MainTab() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={Home} options={{ title: "Youtube" }} />
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          title: "Youtube",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Search")}
+              className="mr-2"
+            >
+              <Ionicons name={"search"} size={25} color={"black"} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <Tab.Screen
         name="Shorts"
         component={Home}
-        options={{ title: "Shorts" }}
+        options={{
+          title: "Shorts",
+        }}
       />
-      <Tab.Screen name="CreatePost" component={CreatePost} />
-      <Tab.Screen name="Subscriptions" component={Profile} />
+      <Tab.Screen
+        name="CreatePost"
+        component={CreatePost}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen name="Subscriptions" component={Subscriptions} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );

@@ -23,8 +23,8 @@ const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationDark: NavigationDarkTheme,
 });
 
-// const CombinedDefaultTheme = merge(MD3LightTheme, LightTheme);
-const CombinedDarkTheme = merge(MD3DarkTheme, DarkTheme);
+const CombinedDefaultTheme = merge(MD3LightTheme, LightTheme);
+// const CombinedDarkTheme = merge(MD3DarkTheme, DarkTheme);
 
 export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -36,8 +36,8 @@ export default function App() {
   return (
     <AuthContext.Provider value={{ isSignedIn, setIsSignedIn }}>
       <ApolloProvider client={client}>
-        <PaperProvider theme={CombinedDarkTheme}>
-          <NavigationContainer theme={CombinedDarkTheme}>
+        <PaperProvider theme={CombinedDefaultTheme}>
+          <NavigationContainer theme={CombinedDefaultTheme}>
             <RootStack />
           </NavigationContainer>
         </PaperProvider>
