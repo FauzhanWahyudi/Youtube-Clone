@@ -78,6 +78,7 @@ export default function PostDetail({ navigation, route }) {
         text1: "Post Liked",
         text2: "Your like was successfully added.",
       });
+      setIsliked(true);
     } catch (error) {
       Toast.show({
         type: "error",
@@ -133,7 +134,6 @@ export default function PostDetail({ navigation, route }) {
             <TouchableOpacity
               onPress={() => {
                 handleAddLike();
-                setIsliked(true);
               }}
               className="mt-4 bg-blue-500 p-2 rounded"
             >
