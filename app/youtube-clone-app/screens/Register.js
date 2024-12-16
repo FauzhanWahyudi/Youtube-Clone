@@ -8,9 +8,11 @@ import {
   Text,
   TextInput,
   Divider,
+  ActivityIndicator,
 } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AddUser } from "../mutations/AddUser";
+import Toast from "react-native-toast-message";
 
 export default function Register({ navigation }) {
   const [addUserMutation, { loading, error, data }] = useMutation(AddUser);
@@ -29,13 +31,35 @@ export default function Register({ navigation }) {
       await addUserMutation({
         variables: { body: { name, username, email, password } },
       });
-      if (error) return console.log("error", error);
+      Toast.show({
+        type: "success",
+        text1: "Register Successful",
+      });
       navigation.navigate("Login");
     } catch (error) {
       console.log("🚀 ~ addUserSubmit ~ error:", error);
+      Toast.show({
+        type: "error",
+        text1: "Login Failed",
+        text2: error.message,
+      });
     }
   };
-
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text className="text-center">...Loading</Text>
+      </View>
+    );
+  }
+  if (error) {
+    Toast.show({
+      type: "error",
+      text1: "Register Failed",
+      text2: error.message,
+    });
+  }
   return (
     //flex-1 is needed because the view need to cover entire section available
     <View className="flex-1 justify-center items-center p-safe">
