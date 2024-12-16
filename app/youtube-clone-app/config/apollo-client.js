@@ -3,7 +3,7 @@ import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
-  uri: "https://4d4d-139-228-111-122.ngrok-free.app/",
+  uri: "https://youtube-clone-server.fauzhanwahyudi.com/",
 });
 
 const authLink = setContext((_, { headers }) => {
