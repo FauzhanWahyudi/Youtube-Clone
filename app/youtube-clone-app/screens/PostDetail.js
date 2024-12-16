@@ -19,6 +19,7 @@ import { use, useContext, useEffect, useState } from "react";
 import ProfileContext from "../contexts/profile";
 import AuthContext from "../contexts/auth";
 import { ActivityIndicator } from "react-native-paper";
+import { RemoveLike } from "../mutations/RemoveLike";
 
 // PostDetail Component
 export default function PostDetail({ navigation, route }) {
@@ -32,6 +33,9 @@ export default function PostDetail({ navigation, route }) {
   useEffect(() => {
     setIsliked(false);
   }, [isSignedIn]);
+
+  const [removeLike] = useMutation(RemoveLike);
+
   const [addComment] = useMutation(AddComment);
   const [newComment, setNewComment] = useState("");
   const { profile } = useContext(ProfileContext);
@@ -54,8 +58,9 @@ export default function PostDetail({ navigation, route }) {
 
   const { post } = data || {};
   const isLikedCheck = () => {
-    if (!post?.likes) return false;
+    if (!post.likes) return false;
     return post.likes.some((like) => {
+      console.log(profile.user.username);
       return like.username === profile.user.username;
     });
   };
@@ -79,6 +84,34 @@ export default function PostDetail({ navigation, route }) {
         text2: "Your like was successfully added.",
       });
       setIsliked(true);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.message,
+      });
+    }
+  };
+
+  const handleRemoveLike = async () => {
+    try {
+      await removeLike({
+        variables: { body: { postId } },
+        refetchQueries: [
+          {
+            query: GET_POST,
+            variables: { body: { postId } },
+            awaitRefetchQueries: true,
+          },
+        ],
+      });
+      await refetch(); // Leverage the refetch function from useQuery
+      Toast.show({
+        type: "success",
+        text1: "Post remove like",
+        text2: "Your like was successfully removed.",
+      });
+      setIsliked(false);
     } catch (error) {
       Toast.show({
         type: "error",
@@ -142,7 +175,10 @@ export default function PostDetail({ navigation, route }) {
               </Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity className="mt-4 bg-red-500 p-2 rounded">
+            <TouchableOpacity
+              className="mt-4 bg-red-500 p-2 rounded"
+              onPress={() => handleRemoveLike()}
+            >
               <Text className="text-white">
                 dislike ({post.likes?.length || 0})
               </Text>
