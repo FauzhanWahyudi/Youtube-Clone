@@ -10,7 +10,7 @@ import ProfileContext from "../contexts/profile";
 import OtherProfile from "../screens/OtherProfile";
 import { useQuery } from "@apollo/client";
 import { GET_PROFILE } from "../queries/users";
-import { Text } from "react-native-paper";
+import { ActivityIndicator, Text } from "react-native-paper";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -20,14 +20,20 @@ export default function RootStack() {
   console.log(isSignedIn, "isSignedIn");
 
   const { data, loading, error, refetch } = useQuery(GET_PROFILE);
-  const [profile, setProfile] = useState({});
-  console.log(data?.user?.user);
+  const [profile, setProfile] = useState({
+    user: {},
+    following: [],
+    followers: [],
+  });
+  // console.log(data?.user?.user);
   useEffect(() => {
-    setProfile(data?.user);
+    if (data) setProfile(data.user);
   }, []);
+
   if (loading)
     return (
       <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
         <Text className="text-center">...Loading</Text>
       </View>
     );

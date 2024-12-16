@@ -18,6 +18,7 @@ import { AddComment } from "../mutations/AddComments";
 import { use, useContext, useEffect, useState } from "react";
 import ProfileContext from "../contexts/profile";
 import AuthContext from "../contexts/auth";
+import { ActivityIndicator } from "react-native-paper";
 
 // PostDetail Component
 export default function PostDetail({ navigation, route }) {
@@ -35,7 +36,13 @@ export default function PostDetail({ navigation, route }) {
   const [newComment, setNewComment] = useState("");
   const { profile } = useContext(ProfileContext);
 
-  if (loading) return <Text>Loading...</Text>;
+  if (loading)
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text className="text-center">...Loading</Text>
+      </View>
+    );
   if (error) {
     Toast.show({
       type: "error",

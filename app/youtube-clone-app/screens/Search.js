@@ -60,7 +60,14 @@ export default function Search({ navigation }) {
         style={styles.input}
       />
       {loading && (
-        <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator
+            size="large"
+            color="#0000ff"
+            style={styles.loader}
+          />
+          <Text className="text-center">...Loading</Text>
+        </View>
       )}
       {error && (
         <Text style={styles.errorText}>An error occurred: {error.message}</Text>

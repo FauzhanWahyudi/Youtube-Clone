@@ -20,7 +20,12 @@ export default function OtherProfile({ route }) {
   });
   // console.log(route.params._id);
   if (loading)
-    return <ActivityIndicator size="large" className="flex-1 justify-center" />;
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text className="text-center">...Loading</Text>
+      </View>
+    );
 
   if (error) return <Text>Error: {error.message}</Text>;
 
