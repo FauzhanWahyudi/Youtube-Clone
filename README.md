@@ -1,23 +1,18 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=17480566&assignment_repo_type=AssignmentRepo)
-# GC01
+# YouTube Clone App
 
-## My Social Media App
+**A minimalist YouTube clone built with React Native, Expo, Apollo Server, and GraphQL.**
 
-My Social Media App adalah sebuah aplikasi client(mobile)-server. Challenge ini juga merupakan salah satu aplikasi mobile pertama dan terakhir kamu, jadi kerjakan dengan baik sebagai bekal portofolio kamu. Pada challenge ini, kamu diminta untuk membuat aplikasi client(mobile)-server dengan detail sebagai berikut:
+This project aims to replicate the core features of YouTube, including user authentication, content creation, social interactions, and search.
 
-### Struktur Folder
-- [ ] server: untuk menyimpan aplikasi server GraphQL kamu 
-- [ ] app: untuk menyimpan aplikasi mobile React Native kamu
+### Features
+* **User Authentication:** Securely register and log in users.
+* **Content Creation:** Create and manage thumbnail posts (video content is not supported).
+* **Comments:** Add comments to posts and engage in discussions.
+* **Search:** Search for users by name or username.
+* **Social Features:** Follow other users and view followers and following lists.
+* **Likes:** Like posts and view the total number of likes for each post.
 
-
-### Fitur
-- [ ] Fitur Register
-- [ ] Fitur Login
-- [ ] FItur Add Post
-- [ ] Fitur Show Post (berdasarkan yang paling baru)
-- [ ] Fitur Comment Post (Embedded Document)
-- [ ] Fitur search user berdasarkan nama atau username
-- [ ] Fitur follow
-- [ ] Menampilkan Followers dan Following dari setiap user (Reference with $lookup)
-- [ ] Fitur Like Post
-- [ ] Menampilkan total like dari setiap post
+### Technology Stack
+* **Frontend:** React Native, Expo, Apollo Client, NativeWind, React Native Paper
+* **Backend:** Node.js, Apollo Server, GraphQL
+* **Database:** MongoDB (for storing users, posts, and comments)
